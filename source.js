@@ -97,6 +97,9 @@ const printCurrentHand = () => {
     const tr = document.createElement('tr');
     const td = [];
 
+    handTilesNum.splice(0, handTilesNum.length);
+    handTilesNum.push([0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]);
+
     // 테이블의 구조: 정렬된 손패, 쯔모 표시, 쯔모 패, 깡 표시
     // 반복문 1: 손패
     for (let i = 0; i < hand.length; i++) {
