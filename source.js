@@ -32,14 +32,12 @@ const initialize = () => {
         }
     }
     
-    /* for (let i = 0; i < tiles.length; i++) {
+    for (let i = 0; i < tiles.length; i++) {
         let random = Math.floor(Math.random() * (tiles.length - i)) + i; // i 이상 tiles.length 미만의 난수 생성
         const temp = tiles[i];
         tiles[i] = tiles[random];
         tiles[random] = temp;
-    } */
-
-    tiles.push('1m','1m','5m','5m','4p','4p','4p','4p','2s','2s','3s','3s','4z','4z');
+    }
 }
 
 // 쯔모한 패를 제외하고 정렬하도록 하는 함수
