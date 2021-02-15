@@ -4,6 +4,7 @@ let toitsuTile = [];
 let mentsuNum = kan.length;
 let taatsuNum = 0;
 let shanten = 6;
+let isolatedMentsuNum = 0;
 
 const calculateShanten = (newHand) => {
     tilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
@@ -23,7 +24,12 @@ const calculateShanten = (newHand) => {
         }
     }
 
-    const _tilesNum = [[...tilesNum[0]], [...tilesNum[1]], [...tilesNum[2]], [...tilesNum[3]]];
+    const _tilesNumForSpecialHand = [[...tilesNum[0]], [...tilesNum[1]], [...tilesNum[2]], [...tilesNum[3]]]; // 치또이쯔와 국사무쌍 계산에 씀
+
+    isolatedMentsuNum = 0;
+    checkIsolatedMentsu();
+
+    const _tilesNum = [[...tilesNum[0]], [...tilesNum[1]], [...tilesNum[2]], [...tilesNum[3]]]; // 일반 패 계산에 씀
 
     // 머리가 있을 때: 머리를 뺌 -> 커쯔를 뺌 -> 슌쯔를 뺌 -> 타쯔 후보를 뺌
     for (let type = 0; type < 4; type++) {
@@ -104,8 +110,10 @@ const calculateShanten = (newHand) => {
         }
     }
 
+    isolatedMentsuNum = 0;
+
     // 치또이쯔의 경우
-    tilesNum = [[..._tilesNum[0]], [..._tilesNum[1]], [..._tilesNum[2]], [..._tilesNum[3]]];
+    tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
     toitsuNum = 0;
     toitsuTile.splice(0, toitsuTile.length);
     mentsuNum = kan.length;
@@ -121,7 +129,7 @@ const calculateShanten = (newHand) => {
     shanten = shanten < 6 - toitsuNum ? shanten : 6 - toitsuNum; // 최소 샹텐 수 갱신
 
     // 국사무쌍의 경우
-    tilesNum = [[..._tilesNum[0]], [..._tilesNum[1]], [..._tilesNum[2]], [..._tilesNum[3]]];
+    tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
     toitsuNum = 0;
     toitsuTile.splice(0, toitsuTile.length);
     mentsuNum = kan.length;
@@ -162,17 +170,19 @@ const calculateShanten = (newHand) => {
 
     //example(_tilesNum);
 
+    tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
+
     return shanten;
 }
 
 const shantenFormula = () => {
     let newShanten = 0;
 
-    if (mentsuNum + taatsuNum <= 4) { // 타쯔 오버가 아닌 경우
-        newShanten = 8 - (mentsuNum * 2) - taatsuNum - toitsuNum;
+    if (isolatedMentsuNum + mentsuNum + taatsuNum <= 4) { // 타쯔 오버가 아닌 경우
+        newShanten = 8 - (isolatedMentsuNum + mentsuNum) * 2 - taatsuNum - toitsuNum;
     }
     else { // 타쯔 오버인 경우
-        newShanten = 8 - (mentsuNum * 2) - (4 - mentsuNum) - toitsuNum;
+        newShanten = 8 - (isolatedMentsuNum + mentsuNum) * 2 - (4 - (isolatedMentsuNum + mentsuNum)) - toitsuNum;
     }
 
     return newShanten;
@@ -311,6 +321,134 @@ const checkCharactersMentsuTaatsu = () => {
         else if (tilesNum[3][i] >= 2 && !(3 == toitsuTile[0] && i == toitsuTile[1])) { // 2개면 타쯔(또이쯔)
             tilesNum[3][i] -= 2;
             taatsuNum++;
+        }
+    }
+}
+
+// 고립된 멘쯔를 찾는다
+// 치또이쯔와는 별개로 일반적인 형태의 패에서만 다룰 예정
+const checkIsolatedMentsu = () => {
+    // 고립된 수패 커쯔 체크
+    for (let type = 0; type < 3; type++) {
+        for (let num = 0; num < 9; num++) {
+            if (num == 0) { // 111 커쯔
+                if (tilesNum[type][num] == 3 && !tilesNum[type][num + 1]) {
+                    tilesNum[type][num] -= 3;
+                    isolatedMentsuNum++;
+                }
+            }
+            else if (0 < num && num <= 7) { // 222~888 커쯔
+                if (!tilesNum[type][num - 1] && tilesNum[type][num] == 3 && !tilesNum[type][num + 1]) {
+                    tilesNum[type][num] -= 3;
+                    isolatedMentsuNum++;
+                }
+            }
+            else { // 999 커쯔
+                if (!tilesNum[type][num - 1] && tilesNum[type][num] == 3) {
+                    tilesNum[type][num] -= 3;
+                    isolatedMentsuNum++;
+                }
+            }
+        }
+    }
+
+    // 고립된 자패 커쯔 체크
+    for (let num = 0; num < 7; num++) {
+        if (tilesNum[3][num] == 3) {
+            tilesNum[3][num] -= 3;
+            isolatedMentsuNum++;
+        }
+    }
+
+    // 고립된 수패 슌쯔 체크 (두 개)
+    for (let type = 0; type < 3; type++) {
+        for (let num = 0; num < 7; num++) {
+            if (num == 0) { // 123XX
+                if (tilesNum[type][num] == 2 && tilesNum[type][num + 1] == 2 && tilesNum[type][num + 2] == 2 && !tilesNum[type][num + 3] && !tilesNum[type][num + 4]) {
+                    tilesNum[type][num] -= 2;
+                    tilesNum[type][num + 1] -= 2;
+                    tilesNum[type][num + 2] -= 2;
+                    isolatedMentsuNum += 2;
+                }
+            }
+            else if (num == 1) { // X234XX
+                if (!tilesNum[type][num - 1] && tilesNum[type][num] == 2 && tilesNum[type][num + 1] == 2 && tilesNum[type][num + 2] == 2 && !tilesNum[type][num + 3] && !tilesNum[type][num + 4]) {
+                    tilesNum[type][num] -= 2;
+                    tilesNum[type][num + 1] -= 2;
+                    tilesNum[type][num + 2] -= 2;
+                    isolatedMentsuNum += 2;
+                }
+            }
+            else if (1 < num && num <= 4) { // XX345XX ~ XX567XX
+                if (!tilesNum[type][num - 2] && !tilesNum[type][num - 1] && tilesNum[type][num] == 2 && tilesNum[type][num + 1] == 2 && tilesNum[type][num + 2] == 2 && !tilesNum[type][num + 3] && !tilesNum[type][num + 4]) {
+                    tilesNum[type][num] -= 2;
+                    tilesNum[type][num + 1] -= 2;
+                    tilesNum[type][num + 2] -= 2;
+                    isolatedMentsuNum += 2;
+                }
+            }
+            else if (num == 5) { // XX678X
+                if (!tilesNum[type][num - 2] && !tilesNum[type][num - 1] && tilesNum[type][num] == 2 && tilesNum[type][num + 1] == 2 && tilesNum[type][num + 2] == 2 && !tilesNum[type][num + 3]) {
+                    tilesNum[type][num] -= 2;
+                    tilesNum[type][num + 1] -= 2;
+                    tilesNum[type][num + 2] -= 2;
+                    isolatedMentsuNum += 2;
+                }
+            }
+            else { // XX789
+                if (!tilesNum[type][num - 2] && !tilesNum[type][num - 1] && tilesNum[type][num] == 2 && tilesNum[type][num + 1] == 2 && tilesNum[type][num + 2] == 2) {
+                    tilesNum[type][num] -= 2;
+                    tilesNum[type][num + 1] -= 2;
+                    tilesNum[type][num + 2] -= 2;
+                    isolatedMentsuNum += 2;
+                }
+            }
+        }
+    }
+
+    // 고립된 수패 슌쯔 체크 (한 개)
+    for (let type = 0; type < 3; type++) {
+        for (let num = 0; num < 7; num++) {
+            if (num == 0) { // 123XX
+                if (tilesNum[type][num] == 1 && tilesNum[type][num + 1] == 1 && tilesNum[type][num + 2] == 1 && !tilesNum[type][num + 3] && !tilesNum[type][num + 4]) {
+                    tilesNum[type][num]--;
+                    tilesNum[type][num + 1]--;
+                    tilesNum[type][num + 2]--;
+                    isolatedMentsuNum++;
+                }
+            }
+            else if (num == 1) { // X234XX
+                if (!tilesNum[type][num - 1] && tilesNum[type][num] == 1 && tilesNum[type][num + 1] == 1 && tilesNum[type][num + 2] == 1 && !tilesNum[type][num + 3] && !tilesNum[type][num + 4]) {
+                    tilesNum[type][num]--;
+                    tilesNum[type][num + 1]--;
+                    tilesNum[type][num + 2]--;
+                    isolatedMentsuNum++;
+                }
+            }
+            else if (1 < num && num <= 4) { // XX345XX ~ XX567XX
+                if (!tilesNum[type][num - 2] && !tilesNum[type][num - 1] && tilesNum[type][num] == 1 && tilesNum[type][num + 1] == 1 && tilesNum[type][num + 2] == 1 && !tilesNum[type][num + 3] && !tilesNum[type][num + 4]) {
+                    tilesNum[type][num]--;
+                    tilesNum[type][num + 1]--;
+                    tilesNum[type][num + 2]--;
+                    isolatedMentsuNum++;
+                }
+            }
+            else if (num == 5) { // XX678X
+                if (!tilesNum[type][num - 2] && !tilesNum[type][num - 1] && tilesNum[type][num] == 1 && tilesNum[type][num + 1] == 1 && tilesNum[type][num + 2] == 1 && !tilesNum[type][num + 3]) {
+                    tilesNum[type][num]--;
+                    tilesNum[type][num + 1]--;
+                    tilesNum[type][num + 2]--;
+                    isolatedMentsuNum++;
+                }
+            }
+            else { // XX789
+                if (!tilesNum[type][num - 2] && !tilesNum[type][num - 1] && tilesNum[type][num] == 1 && tilesNum[type][num + 1] == 1 && tilesNum[type][num + 2] == 1) {
+                    tilesNum[type][num]--;
+                    tilesNum[type][num + 1]--;
+                    tilesNum[type][num + 2]--;
+                    isolatedMentsuNum++;
+                }
+            }
         }
     }
 }

@@ -5,6 +5,8 @@ const dora = [];
 const kan = [];
 const types = ['m', 'p', 's', 'z'];
 let openedTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
+let handTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
+let calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 const initialize = () => {
     for (let type = 0; type < 4; type++) {
@@ -91,7 +93,7 @@ const printCurrentHand = () => {
     sortHand();
 
     const table = document.getElementById('hand');
-    table.textContent = ''
+    table.innerHTML = ''
     const tr = document.createElement('tr');
     const td = [];
 
@@ -102,18 +104,31 @@ const printCurrentHand = () => {
 
         if (i == hand.length - 1) {
             const space = document.createElement('td');
-            space.textContent = 'ツモ';
+            space.innerHTML = 'ツモ';
             tr.appendChild(space);
         }
 
         const img = document.createElement('img');
         img.setAttribute('src', 'img/' + hand[i] + '.png');
+        img.setAttribute('class', 'selectable');
         img.setAttribute('onclick', 'discardTile(this)');
-        img.setAttribute('onmouseenter', 'showNextHandInfo(this)');
-        img.setAttribute('onmouseout', 'this.removeAttribute(\'class\')');
+        img.setAttribute('onmouseenter', 'showNextHandInfo(' + i + ')');
         img.setAttribute('index', i);
+
+        const span = document.createElement('span');
+        span.setAttribute('class', 'arrow-box');
+
+        td[i].setAttribute('class', 'arrow-container');
         td[i].appendChild(img);
+        td[i].appendChild(span);
         tr.appendChild(td[i]);
+
+        if (hand[i].charAt(0) != 0) {
+            handTilesNum[types.indexOf(hand[i].charAt(1))][hand[i].charAt(0) - 1]++;
+        }
+        else {
+            handTilesNum[types.indexOf(hand[i].charAt(1))][4]++;
+        }
     }
 
     // 반복문 2: 깡 표시
@@ -148,6 +163,8 @@ const printCurrentHand = () => {
         img[3].setAttribute('src', 'img/back.png');
         td[td.length - 1].appendChild(img[3]);
         tr.appendChild(td[td.length - 1]);
+
+        handTilesNum[types.indexOf(kan[i].charAt(1))][kan[i].charAt(0) - 1]++;
     }
 
     table.appendChild(tr);
@@ -163,6 +180,8 @@ const discardTile = (a) => {
     const td = table.getElementsByTagName('td');
     const img = document.createElement('img');
 
+    calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
     img.setAttribute('src', 'img/' + hand[index] + '.png');
     kawa.push(hand[index]);
     td[kawa.length - 1].appendChild(img);
@@ -173,28 +192,36 @@ const discardTile = (a) => {
     countOpenedTiles(open);
 
     printCurrentHand();
+    /* for (let i = 0; i < hand.length; i++) {
+        showNextHandInfo(i);
+    } */
 }
 
-const showNextHandInfo = (img) => {
-    const index = img.getAttribute('index');
+const showNextHandInfo = (index) => {
+    if (calculatedTile[index]) { return; }
     const newHand = [...hand];
-
-    img.setAttribute('class', 'mouseover');
 
     newHand.splice(index, 1);
     const shanten = calculateShanten(newHand);
     const validTiles = calculateTilesForNextShanten(newHand, shanten - 1);
 
-    const h1 = document.getElementById("shanten");
-    let ukeireMaisuu = validTiles.length * 4;
-    h1.innerText = '';
-    h1.innerText += 'シャンテン数: ' + shanten;
-    h1.innerText += '\n受け入れ種類: ';
+    const span = document.getElementsByClassName('arrow-box')[index];
+    let ukeireMaisuu1 = validTiles.length * 4; // 손패만을 고려했을 때의 유효패 개수
+    let ukeireMaisuu2 = validTiles.length * 4; // 도라 표시패와 강까지 고려했을 때의 유효패 개수
+    span.innerHTML = '';
+    span.innerHTML += shanten + 'シャンテン';
+    span.innerHTML += '<p>';
     for (let i = 0; i < validTiles.length; i++) {
-        h1.innerText += validTiles[i] + ' ';
-        ukeireMaisuu -= openedTilesNum[types.indexOf(validTiles[i].charAt(1))][validTiles[i].charAt(0) - 1];
+        span.innerHTML += '<img src="img/' + validTiles[i] + '.png" height="40px" width="30px" />';
+        ukeireMaisuu1 -= handTilesNum[types.indexOf(validTiles[i].charAt(1))][validTiles[i].charAt(0) - 1];
+        ukeireMaisuu2 -= openedTilesNum[types.indexOf(validTiles[i].charAt(1))][validTiles[i].charAt(0) - 1];
     }
-    h1.innerText += '\n受け入れ枚数: ' + ukeireMaisuu + '枚';
+    span.innerHTML += '<p>';
+    span.innerHTML += '受け入れ枚数: ' + ukeireMaisuu1 + '枚';
+    span.innerHTML += '<p>';
+    span.innerHTML += '受け入れ枚数(場況含め): ' + ukeireMaisuu2 + '枚';
+
+    calculatedTile[index] = 1;
 }
 
 const calculateTilesForNextShanten = (newHand, nextShanten) => {
@@ -263,10 +290,8 @@ const checkKan = () => {
         // 정렬된 패이므로 양 끝 두 장만 체크하면 됨
         if (kanCheckHand[i] == kanCheckHand[i + 3]) {
             td[i].innerText = 'カン';
-            td[i].setAttribute('class', 'kan');
+            td[i].setAttribute('class', 'kan selectable');
             td[i].setAttribute('onclick', 'callKan(\'' + kanCheckHand[i] + '\')');
-            td[i].setAttribute('onmouseenter', 'this.setAttribute(\'class\', \'kan mouseover\')');
-            td[i].setAttribute('onmouseout', 'this.setAttribute(\'class\', \'kan\')');
             i += 3;
         }
     }
@@ -276,10 +301,8 @@ const checkKan = () => {
         // 정렬된 패이므로 양 끝 두 장만 체크하면 됨
         if (kanCheckHand[i] == kanCheckHand[i + 2] && kanCheckHand[i] == kanCheckHand[kanCheckHand.length - 1]) {
             td[i].innerText = 'カン';
-            td[i].setAttribute('class', 'kan');
+            td[i].setAttribute('class', 'kan selectable');
             td[i].setAttribute('onclick', 'callKan(\'' + kanCheckHand[i] + '\')');
-            td[i].setAttribute('onmouseenter', 'this.setAttribute(\'class\', \'kan mouseover\')');
-            td[i].setAttribute('onmouseout', 'this.setAttribute(\'class\', \'kan\')');
             break;
         }
     }
@@ -319,4 +342,7 @@ window.onload = function() {
     getFirstHand();
     printCurrentHand();
     printDora();
+    /* for (let i = 0; i < hand.length; i++) {
+        showNextHandInfo(i);
+    } */
 }
