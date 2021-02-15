@@ -1,5 +1,6 @@
 let tilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
 let toitsuNum = 0;
+let toitsuTile = [];
 let mentsuNum = kan.length;
 let taatsuNum = 0;
 let shanten = 6;
@@ -7,6 +8,7 @@ let shanten = 6;
 const calculateShanten = (newHand) => {
     tilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
     toitsuNum = 0;
+    toitsuTile.splice(0, toitsuTile.length);
     mentsuNum = kan.length;
     taatsuNum = 0;
     shanten = 6;
@@ -29,12 +31,14 @@ const calculateShanten = (newHand) => {
             for (let addend = 0; addend < 8; addend++) {
                 tilesNum = [[..._tilesNum[0]], [..._tilesNum[1]], [..._tilesNum[2]], [..._tilesNum[3]]];
                 toitsuNum = 0;
+                toitsuTile.splice(0, toitsuTile.length);
                 mentsuNum = kan.length;
                 taatsuNum = 0;
 
                 if (tilesNum[type][num] >= 2) { // (type, num)에 머리가 있다고 판단
                     tilesNum[type][num] -= 2; // (type, num)에서 머리를 뺀다
                     toitsuNum++;
+                    toitsuTile.push(type, num);
 
                     checkMentsuTaatsu1(0, addend); // 만수의 멘쯔와 타쯔 체크
                     checkMentsuTaatsu1(1, addend); // 통수의 멘쯔와 타쯔 체크
@@ -52,12 +56,14 @@ const calculateShanten = (newHand) => {
             for (let addend = 0; addend < 8; addend++) {
                 tilesNum = [[..._tilesNum[0]], [..._tilesNum[1]], [..._tilesNum[2]], [..._tilesNum[3]]];
                 toitsuNum = 0;
+                toitsuTile.splice(0, toitsuTile.length);
                 mentsuNum = kan.length;
                 taatsuNum = 0;
 
                 if (tilesNum[type][num] >= 2) { // (type, num)에 머리가 있다고 판단
                     tilesNum[type][num] -= 2; // (type, num)에서 머리를 뺀다
                     toitsuNum++;
+                    toitsuTile.push(type, num);
 
                     checkMentsuTaatsu2(0, addend); // 만수의 멘쯔와 타쯔 체크
                     checkMentsuTaatsu2(1, addend); // 통수의 멘쯔와 타쯔 체크
@@ -75,6 +81,7 @@ const calculateShanten = (newHand) => {
             for (let addend = 0; addend < 8; addend++) {
                 tilesNum = [[..._tilesNum[0]], [..._tilesNum[1]], [..._tilesNum[2]], [..._tilesNum[3]]];
                 toitsuNum = 0;
+                toitsuTile.splice(0, toitsuTile.length);
                 mentsuNum = kan.length;
                 taatsuNum = 0;
 
@@ -82,6 +89,16 @@ const calculateShanten = (newHand) => {
                 checkMentsuTaatsu1(1, addend); // 통수의 멘쯔와 타쯔 체크
                 checkMentsuTaatsu1(2, addend); // 삭수의 멘쯔와 타쯔 체크
                 checkCharactersMentsuTaatsu(); // 자패의 멘쯔와 타쯔 체크
+
+                // 5장째의 단기 대기를 하는 경우 방지
+                for (let _type = 0; _type < 4; _type++) {
+                    for (let _num = 0; (_type < 3 && _num < 9) || (_type == 3 && _num < 7); _num++) {
+                        if (tilesNum[_type][_num] == 1 && _tilesNum[_type][_num] == 4) {
+                            taatsuNum--;
+                        }
+                    }
+                }
+
                 shanten = shanten < shantenFormula() ? shanten : shantenFormula(); // 최소 샹텐 수 갱신
             }
         }
@@ -90,6 +107,7 @@ const calculateShanten = (newHand) => {
     // 치또이쯔의 경우
     tilesNum = [[..._tilesNum[0]], [..._tilesNum[1]], [..._tilesNum[2]], [..._tilesNum[3]]];
     toitsuNum = 0;
+    toitsuTile.splice(0, toitsuTile.length);
     mentsuNum = kan.length;
     taatsuNum = 0;
     for (let type = 0; type < 4; type++) {
@@ -105,6 +123,7 @@ const calculateShanten = (newHand) => {
     // 국사무쌍의 경우
     tilesNum = [[..._tilesNum[0]], [..._tilesNum[1]], [..._tilesNum[2]], [..._tilesNum[3]]];
     toitsuNum = 0;
+    toitsuTile.splice(0, toitsuTile.length);
     mentsuNum = kan.length;
     taatsuNum = 0;
     kokushiCount = 0;
@@ -194,7 +213,7 @@ const checkMentsuTaatsu1 = (type, addend) => {
     // 타쯔 체크
     for (let i = 0; i < 9; i++) {
         // 또이쯔 체크
-        if (tilesNum[type][i] >= 2) {
+        if (tilesNum[type][i] >= 2 && !(type == toitsuTile[0] && i == toitsuTile[1])) {
             tilesNum[type][i] -= 2;
             taatsuNum++;
         }
@@ -254,7 +273,7 @@ const checkMentsuTaatsu2 = (type, addend) => {
     // 타쯔 체크
     for (let i = 0; i < 9; i++) {
         // 또이쯔 체크
-        if (tilesNum[type][i] >= 2) {
+        if (tilesNum[type][i] >= 2 && !(type == toitsuTile[0] && i == toitsuTile[1])) {
             tilesNum[type][i] -= 2;
             taatsuNum++;
         }
@@ -284,13 +303,13 @@ const checkCharactersMentsuTaatsu = () => {
     // 커쯔 체크
     // 마작은 한 종류의 패가 4장밖에 없으므로
     // 한 종류의 패에서 커쯔와 또이쯔가 동시에 나올 수 없음
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 7; i++) {
         if (tilesNum[3][i] >= 3) { // 3개 이상이면 커쯔
             tilesNum[3][i] -= 3;
             mentsuNum++;
         }
-        else if (tilesNum[3][i] >= 2) { // 2개면 타쯔(또이쯔)
-            tilesNum[2][i] -= 2;
+        else if (tilesNum[3][i] >= 2 && !(3 == toitsuTile[0] && i == toitsuTile[1])) { // 2개면 타쯔(또이쯔)
+            tilesNum[3][i] -= 2;
             taatsuNum++;
         }
     }
