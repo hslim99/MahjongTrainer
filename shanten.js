@@ -112,47 +112,49 @@ const calculateShanten = (newHand) => {
 
     isolatedMentsuNum = 0;
 
-    // 치또이쯔의 경우
-    tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
-    toitsuNum = 0;
-    toitsuTile.splice(0, toitsuTile.length);
-    mentsuNum = kan.length;
-    taatsuNum = 0;
-    for (let type = 0; type < 4; type++) {
-        for (let num = 0; (type < 3 && num < 9) || (type == 3 && num < 7); num++) { 
-            if (tilesNum[type][num] >= 2) { // (type, num)에 머리가 있다고 판단
-                tilesNum[type][num] -= 2; // (type, num)에서 머리를 뺀다
-                toitsuNum++;
+    if (!kan.length) {
+        // 치또이쯔의 경우
+        tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
+        toitsuNum = 0;
+        toitsuTile.splice(0, toitsuTile.length);
+        mentsuNum = kan.length;
+        taatsuNum = 0;
+        for (let type = 0; type < 4; type++) {
+            for (let num = 0; (type < 3 && num < 9) || (type == 3 && num < 7); num++) { 
+                if (tilesNum[type][num] >= 2) { // (type, num)에 머리가 있다고 판단
+                    tilesNum[type][num] -= 2; // (type, num)에서 머리를 뺀다
+                    toitsuNum++;
+                }
             }
         }
-    }
-    shanten = shanten < 6 - toitsuNum ? shanten : 6 - toitsuNum; // 최소 샹텐 수 갱신
+        shanten = shanten < 6 - toitsuNum ? shanten : 6 - toitsuNum; // 최소 샹텐 수 갱신
 
-    // 국사무쌍의 경우
-    tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
-    toitsuNum = 0;
-    toitsuTile.splice(0, toitsuTile.length);
-    mentsuNum = kan.length;
-    taatsuNum = 0;
-    kokushiCount = 0;
+        // 국사무쌍의 경우
+        tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
+        toitsuNum = 0;
+        toitsuTile.splice(0, toitsuTile.length);
+        mentsuNum = kan.length;
+        taatsuNum = 0;
+        kokushiCount = 0;
     
-    // 이하의 반복문에서 또이쯔를 찾으면 또이쯔의 카운트를 늘림
-    for (let type = 0; type < 4; type++) {
-        if (type < 3) { // 노두패를 셈
-            if (tilesNum[type][0] == 1) { kokushiCount++; }
-            else if (tilesNum[type][0] > 1) { toitsuNum++; }
-            if (tilesNum[type][8] == 1) { kokushiCount++; }
-            else if (tilesNum[type][8] > 1) { toitsuNum++; }
-        }
-        else { // 자패를 셈
-            for (let num = 0; num < 7; num++) {
-                if (tilesNum[type][num] == 1) { kokushiCount++; }
-                else if (tilesNum[type][num] > 1) { toitsuNum++; }
+        // 이하의 반복문에서 또이쯔를 찾으면 또이쯔의 카운트를 늘림
+        for (let type = 0; type < 4; type++) {
+            if (type < 3) { // 노두패를 셈
+                if (tilesNum[type][0] == 1) { kokushiCount++; }
+                else if (tilesNum[type][0] > 1) { toitsuNum++; }
+                if (tilesNum[type][8] == 1) { kokushiCount++; }
+                else if (tilesNum[type][8] > 1) { toitsuNum++; }
+            }
+            else { // 자패를 셈
+                for (let num = 0; num < 7; num++) {
+                    if (tilesNum[type][num] == 1) { kokushiCount++; }
+                    else if (tilesNum[type][num] > 1) { toitsuNum++; }
+                }
             }
         }
+        if (toitsuNum) { kokushiCount++; } // 또이쯔가 있었다면 국사 카운트를 늘림
+        shanten = shanten < 13 - kokushiCount ? shanten : 13 - kokushiCount; // 최소 샹텐 수 갱신
     }
-    if (toitsuNum) { kokushiCount++; } // 또이쯔가 있었다면 국사 카운트를 늘림
-    shanten = shanten < 13 - kokushiCount ? shanten : 13 - kokushiCount; // 최소 샹텐 수 갱신
 
     /* const h1 = document.getElementById("shanten");
     h1.innerText = '';
@@ -169,8 +171,6 @@ const calculateShanten = (newHand) => {
     // h1.innerText += '\nシャンテン数: ' + shanten;
 
     //example(_tilesNum);
-
-    tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
 
     return shanten;
 }
