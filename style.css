@@ -1,3 +1,7 @@
+body {
+    font-size: 16px;
+    font-weight: bold;
+}
 .language {
     text-align: right;
     margin: 5px;
@@ -9,6 +13,12 @@
 table {
     margin: auto;
     border-spacing: 0px;
+}
+#wind, #dora {
+    display: inline-block;
+}
+#game-info {
+    text-align: center;
 }
 h1 {
     text-align: center;
@@ -39,8 +49,6 @@ td {
     border-radius: 10px;
     background: #333;
     color: #fff;
-    font-size: 16px;
-    font-weight: bold;
     text-align: left;
     margin-top: 10px;
     margin-left: -90px;

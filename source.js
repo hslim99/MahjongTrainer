@@ -38,6 +38,10 @@ const initialize = () => {
         tiles[i] = tiles[random];
         tiles[random] = temp;
     }
+
+    const table = document.getElementById('wind');
+    const winds = ['東', '南', '西', '北'];
+    table.innerHTML = '<tr><td><span class="term">' + terms[0][language] + '</span><br>' + winds[Math.floor(Math.random() * 4)] + '</td><td><span class="term">' + terms[1][language] + '</span><br>' + winds[Math.floor(Math.random() * 2)] + '</td></tr>';
 }
 
 // 쯔모한 패를 제외하고 정렬하도록 하는 함수
@@ -81,11 +85,11 @@ const getFirstHand = () => {
     dora.push(open);
     countOpenedTiles(open);
 
-    /* for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 14; i++) {
         open = tiles.pop();
         hand.push(open);
         countOpenedTiles(open);
-    } */
+    }
 }
 
 const printCurrentHand = () => {
@@ -107,7 +111,7 @@ const printCurrentHand = () => {
 
         if (i == hand.length - 1) {
             const space = document.createElement('td');
-            space.innerHTML = '<span class="term">' + terms[1][language] + '</span>';
+            space.innerHTML = '<span class="term">' + terms[3][language] + '</span>';
             tr.appendChild(space);
         }
 
@@ -212,7 +216,7 @@ const showNextHandInfo = (index) => {
     let ukeireMaisuu1 = validTiles.length * 4; // 손패만을 고려했을 때의 유효패 개수
     let ukeireMaisuu2 = validTiles.length * 4; // 도라 표시패와 강까지 고려했을 때의 유효패 개수
     span.innerHTML = '';
-    span.innerHTML += shanten + '<span class="term">' + terms[3].kr + '</span>';
+    span.innerHTML += shanten + '<span class="term">' + terms[5].kr + '</span>';
     span.innerHTML += '<p>';
     for (let i = 0; i < validTiles.length; i++) {
         span.innerHTML += '<img src="img/' + validTiles[i] + '.png" height="40px" width="30px" />';
@@ -220,9 +224,9 @@ const showNextHandInfo = (index) => {
         ukeireMaisuu2 -= openedTilesNum[types.indexOf(validTiles[i].charAt(1))][validTiles[i].charAt(0) - 1];
     }
     span.innerHTML += '<p>';
-    span.innerHTML += '<span class="term">' + terms[4][language] + '</span>: ' + ukeireMaisuu1 + '<span class="term">' + terms[6][language] + '</span>';
+    span.innerHTML += '<span class="term">' + terms[6][language] + '</span>: ' + ukeireMaisuu1 + '<span class="term">' + terms[8][language] + '</span>';
     span.innerHTML += '<p>';
-    span.innerHTML += '<span class="term">' + terms[5][language] + '</span>: ' + ukeireMaisuu2 + '<span class="term">' + terms[6][language] + '</span>';
+    span.innerHTML += '<span class="term">' + terms[7][language] + '</span>: ' + ukeireMaisuu2 + '<span class="term">' + terms[8][language] + '</span>';
 
     calculatedTile[index] = 1;
 }
@@ -251,7 +255,7 @@ const printDora = () => {
     const table = document.getElementById('dora');
     const td = table.getElementsByTagName('td');
 
-    table.innerHTML = '<tr><td><span class="term">' + terms[0][language] + '</span></td><td /><td /><td /><td /><td /></tr>';
+    table.innerHTML = '<tr><td><span class="term">' + terms[2][language] + '</span></td><td /><td /><td /><td /><td /></tr>';
 
     for (let i = 0; i < dora.length; i++) {
         const img = document.createElement('img');
@@ -292,7 +296,7 @@ const checkKan = () => {
     for (let i = 0; i < kanCheckHand.length - 4; i++) {
         // 정렬된 패이므로 양 끝 두 장만 체크하면 됨
         if (kanCheckHand[i] == kanCheckHand[i + 3]) {
-            td[i].innerHTML = '<span class="term">' + terms[2][language] + '</span>';
+            td[i].innerHTML = '<span class="term">' + terms[4][language] + '</span>';
             td[i].setAttribute('class', 'kan selectable');
             td[i].setAttribute('onclick', 'callKan(\'' + kanCheckHand[i] + '\')');
             i += 3;
@@ -303,7 +307,7 @@ const checkKan = () => {
     for (let i = 0; i < kanCheckHand.length - 3; i++) {
         // 정렬된 패이므로 양 끝 두 장만 체크하면 됨
         if (kanCheckHand[i] == kanCheckHand[i + 2] && kanCheckHand[i] == kanCheckHand[kanCheckHand.length - 1]) {
-            td[i].innerHTML = '<span class="term">' + terms[2][language] + '</span>';
+            td[i].innerHTML = '<span class="term">' + terms[4][language] + '</span>';
             td[i].setAttribute('class', 'kan selectable');
             td[i].setAttribute('onclick', 'callKan(\'' + kanCheckHand[i] + '\')');
             break;

@@ -1,6 +1,14 @@
 let language = 'kr';
 const terms = [
     {
+        kr: "자풍",
+        jp: "自風"
+    },
+    {
+        kr: "장풍",
+        jp: "場風"
+    },
+    {
         kr: "도라<br>표시패",
         jp: "ドラ<br>表示牌"
     },
