@@ -1,3 +1,11 @@
+.language {
+    text-align: right;
+    margin: 5px;
+}
+.language span {
+    pointer-events: auto;
+    cursor: pointer;
+}
 table {
     margin: auto;
     border-spacing: 0px;
