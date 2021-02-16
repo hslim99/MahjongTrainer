@@ -16,7 +16,9 @@
 * ~~5장째 패로 대기하도록 샹텐 수가 계산되는 버그~~ (해결됨)
   
   ~~e.g., <img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"> 의 경우 실제로는 1샹텐이지만 0샹텐(텐파이)로 표기됨~~
-* ~~깡을 쳤을 때 나머지 패로 치또이츠를 만들면 버그가 생김~~ (해결됨)
+* ~~깡을 쳤을 때 나머지 패로 치또이츠를 만들면 버그~~ (해결됨)
+* ~~깡을 선언하고 영상패를 쯔모한 손패에서 샹텐 수가 계산되지 않는 버그~~ (해결됨)
+* ~~똑같은 머리가 두 쌍인 치또이쯔가 계산되는 버그~~ (해결됨)
 
 "[riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles)" by "[FluffyStuff](https://github.com/FluffyStuff)" is licensed by under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) / Modified from original
 

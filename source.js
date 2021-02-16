@@ -81,11 +81,11 @@ const getFirstHand = () => {
     dora.push(open);
     countOpenedTiles(open);
 
-    for (let i = 0; i < 14; i++) {
+    /* for (let i = 0; i < 14; i++) {
         open = tiles.pop();
         hand.push(open);
         countOpenedTiles(open);
-    }
+    } */
 }
 
 const printCurrentHand = () => {
@@ -292,7 +292,7 @@ const checkKan = () => {
     for (let i = 0; i < kanCheckHand.length - 4; i++) {
         // 정렬된 패이므로 양 끝 두 장만 체크하면 됨
         if (kanCheckHand[i] == kanCheckHand[i + 3]) {
-            td[i].innerText = '<span class="term">' + terms[2][language] + '</span>';
+            td[i].innerHTML = '<span class="term">' + terms[2][language] + '</span>';
             td[i].setAttribute('class', 'kan selectable');
             td[i].setAttribute('onclick', 'callKan(\'' + kanCheckHand[i] + '\')');
             i += 3;
@@ -303,7 +303,7 @@ const checkKan = () => {
     for (let i = 0; i < kanCheckHand.length - 3; i++) {
         // 정렬된 패이므로 양 끝 두 장만 체크하면 됨
         if (kanCheckHand[i] == kanCheckHand[i + 2] && kanCheckHand[i] == kanCheckHand[kanCheckHand.length - 1]) {
-            td[i].innerText = '<span class="term">' + terms[2][language] + '</span>';
+            td[i].innerHTML = '<span class="term">' + terms[2][language] + '</span>';
             td[i].setAttribute('class', 'kan selectable');
             td[i].setAttribute('onclick', 'callKan(\'' + kanCheckHand[i] + '\')');
             break;
@@ -335,6 +335,8 @@ const callKan = (tile) => {
     open = tiles.pop();
     hand.push(open);
     countOpenedTiles(open);
+
+    calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
     printCurrentHand();
     printDora();

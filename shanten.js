@@ -119,16 +119,26 @@ const calculateShanten = (newHand) => {
         toitsuTile.splice(0, toitsuTile.length);
         mentsuNum = kan.length;
         taatsuNum = 0;
+        let tileTypesNum = 0;
         for (let type = 0; type < 4; type++) {
             for (let num = 0; (type < 3 && num < 9) || (type == 3 && num < 7); num++) { 
+                if (tilesNum[type][num]) { tileTypesNum++; }
                 if (tilesNum[type][num] >= 2) { // (type, num)에 머리가 있다고 판단
                     tilesNum[type][num] -= 2; // (type, num)에서 머리를 뺀다
                     toitsuNum++;
                 }
             }
         }
-        shanten = shanten < 6 - toitsuNum ? shanten : 6 - toitsuNum; // 최소 샹텐 수 갱신
-
+        if (tileTypesNum < 7 && toitsuNum == 6) {
+            shanten = shanten < 7 - tileTypesNum ? shanten : 7 - tileTypesNum; // 최소 샹텐 수 갱신
+        }
+        else if (tileTypesNum < 7 && toitsuNum <= 5) {
+            shanten = shanten < 7 - toitsuNum ? shanten : 7 - toitsuNum; // 최소 샹텐 수 갱신
+        }
+        else {
+            shanten = shanten < 6 - toitsuNum ? shanten : 6 - toitsuNum; // 최소 샹텐 수 갱신
+        }
+         
         // 국사무쌍의 경우
         tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
         toitsuNum = 0;
@@ -155,22 +165,6 @@ const calculateShanten = (newHand) => {
         if (toitsuNum) { kokushiCount++; } // 또이쯔가 있었다면 국사 카운트를 늘림
         shanten = shanten < 13 - kokushiCount ? shanten : 13 - kokushiCount; // 최소 샹텐 수 갱신
     }
-
-    /* const h1 = document.getElementById("shanten");
-    h1.innerText = '';
-    for (let i = 0; i < newHand.length; i++) { h1.innerText += newHand[i]; }
-    for (let i = 0; i < kan.length; i++) { h1.innerText += ' ' + kan[i] + 'カン'; } */
-    
-    /* const textArea = document.createElement('textarea');
-    textArea.value = h1.innerText;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textArea); */
-
-    // h1.innerText += '\nシャンテン数: ' + shanten;
-
-    //example(_tilesNum);
 
     return shanten;
 }
