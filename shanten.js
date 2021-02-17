@@ -5,6 +5,7 @@ let mentsuNum = kan.length;
 let taatsuNum = 0;
 let shanten = 6;
 let isolatedMentsuNum = 0;
+let isLastTaatsuRyanmen = false;
 
 const calculateShanten = (newHand) => {
     tilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
@@ -13,6 +14,7 @@ const calculateShanten = (newHand) => {
     mentsuNum = kan.length;
     taatsuNum = 0;
     shanten = 6;
+    isLastTaatsuRyanmen = false;
 
     // tilesNum에 현재 hand를 정리
     for (let i = 0; i < newHand.length; i++) {
@@ -76,6 +78,9 @@ const calculateShanten = (newHand) => {
                     checkMentsuTaatsu2(2, addend); // 삭수의 멘쯔와 타쯔 체크
                     checkCharactersMentsuTaatsu(); // 자패의 멘쯔와 타쯔 체크
                     shanten = shanten < shantenFormula() ? shanten : shantenFormula(); // 최소 샹텐 수 갱신
+                    if (shanten) {
+                        isLastTaatsuRyanmen = false;
+                    }
                 }
             }
         }
@@ -150,20 +155,21 @@ const calculateShanten = (newHand) => {
         // 이하의 반복문에서 또이쯔를 찾으면 또이쯔의 카운트를 늘림
         for (let type = 0; type < 4; type++) {
             if (type < 3) { // 노두패를 셈
-                if (tilesNum[type][0] == 1) { kokushiCount++; }
-                else if (tilesNum[type][0] > 1) { toitsuNum++; }
-                if (tilesNum[type][8] == 1) { kokushiCount++; }
-                else if (tilesNum[type][8] > 1) { toitsuNum++; }
+                if (tilesNum[type][0] >= 1) { kokushiCount++; }
+                if (tilesNum[type][0] > 1) { toitsuNum++; }
+                if (tilesNum[type][8] >= 1) { kokushiCount++; }
+                if (tilesNum[type][8] > 1) { toitsuNum++; }
             }
             else { // 자패를 셈
                 for (let num = 0; num < 7; num++) {
-                    if (tilesNum[type][num] == 1) { kokushiCount++; }
-                    else if (tilesNum[type][num] > 1) { toitsuNum++; }
+                    if (tilesNum[type][num] >= 1) { kokushiCount++; }
+                    if (tilesNum[type][num] > 1) { toitsuNum++; }
                 }
             }
         }
         if (toitsuNum) { kokushiCount++; } // 또이쯔가 있었다면 국사 카운트를 늘림
         shanten = shanten < 13 - kokushiCount ? shanten : 13 - kokushiCount; // 최소 샹텐 수 갱신
+        console.log(kokushiCount);
     }
 
     return shanten;
@@ -229,6 +235,9 @@ const checkMentsuTaatsu1 = (type, addend) => {
             tilesNum[type][i]--;
             tilesNum[type][i + 1]--;
             taatsuNum++;
+            if (i != 0 && i != 7) {
+                isLastTaatsuRyanmen = true;
+            }
         }
 
         if (i == 7) { continue; }
@@ -289,6 +298,9 @@ const checkMentsuTaatsu2 = (type, addend) => {
             tilesNum[type][i]--;
             tilesNum[type][i + 1]--;
             taatsuNum++;
+            if (i != 0 && i != 7) {
+                isLastTaatsuRyanmen = true;
+            }
         }
 
         if (i == 7) { continue; }

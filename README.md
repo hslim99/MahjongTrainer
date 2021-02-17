@@ -10,6 +10,8 @@
 
 클릭하지 않고 패에 마우스만 올려놓았을 경우에는 해당 패를 버렸을 경우의 샹텐 수<sup>[1](#footnote1)</sup>가 나타나게 됩니다.
 
+버림패가 18장에 달했을 경우 그대로 조패가 끝나며, 왕패 우측의 다시하기 버튼으로 새로이 시작할 수 있습니다.
+
 ## Known issues
 
 * 남은 패의 수가 표시가 되지 않음
@@ -19,6 +21,8 @@
 * ~~깡을 쳤을 때 나머지 패로 치또이츠를 만들면 버그~~ (해결됨)
 * ~~깡을 선언하고 영상패를 쯔모한 손패에서 샹텐 수가 계산되지 않는 버그~~ (해결됨)
 * ~~똑같은 머리가 두 쌍인 치또이쯔가 계산되는 버그~~ (해결됨)
+* ~~국사무쌍의 샹텐 수가 제대로 계산되지 않는 버그~~ (해결됨)
+* 깡을 선언했을 때 버림패의 수가 달라야 함
 
 "[riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles)" by "[FluffyStuff](https://github.com/FluffyStuff)" is licensed by under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) / Modified from original
 

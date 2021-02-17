@@ -10,6 +10,9 @@ body {
     pointer-events: auto;
     cursor: pointer;
 }
+.wind {
+    font-size: 32px;
+}
 table {
     margin: auto;
     border-spacing: 0px;

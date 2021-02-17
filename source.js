@@ -45,12 +45,12 @@ const initialize = () => {
 
     let td = document.createElement('td');
     td.appendChild(getTermElement(0));
-    td.innerHTML += '<br><span>' + winds[Math.floor(Math.random() * 4)] + '</span>';
+    td.innerHTML += '<br><span class="wind">' + winds[Math.floor(Math.random() * 4)] + '</span>';
     tr.appendChild(td);
     
     td = document.createElement('td');
     td.appendChild(getTermElement(1));
-    td.innerHTML += '<br><span>' + winds[Math.floor(Math.random() * 2)] + '</span>';
+    td.innerHTML += '<br><span class="wind">' + winds[Math.floor(Math.random() * 2)] + '</span>';
     tr.appendChild(td);
 
     windTable.appendChild(tr);
@@ -204,6 +204,7 @@ const printCurrentHand = () => {
     checkKan();
 }
 
+// 패를 버리면서 버림패를 출력하는 함수
 const discardTile = (a) => {
     if (kawa.length >= 18) { return; }
 
@@ -232,8 +233,10 @@ const showNextHandInfo = (index) => {
 
     newHand.splice(index, 1);
     const shanten = calculateShanten(newHand);
-    const validTiles = calculateTilesForNextShanten(newHand, shanten - 1);
+    const validTiles = calculateTilesForNextShanten(newHand, shanten - 1).validTiles;
+    /* const ryanmenTiles = calculateTilesForNextShanten(newHand, shanten - 1).ryanmenTiles; */
 
+    // 기본 유효패
     const span = document.getElementsByClassName('arrow-box')[index];
     let ukeireMaisuu1 = validTiles.length * 4; // 손패만을 고려했을 때의 유효패 개수
     let ukeireMaisuu2 = validTiles.length * 4; // 도라 표시패와 강까지 고려했을 때의 유효패 개수
@@ -256,14 +259,40 @@ const showNextHandInfo = (index) => {
     span.appendChild(getTermElement(8));
     span.appendChild(document.createElement('p'));
     span.appendChild(getTermElement(7));
-    span.innerHTML += ': ' + ukeireMaisuu1;
+    span.innerHTML += ': ' + ukeireMaisuu2;
     span.appendChild(getTermElement(8));
+
+    /* // 이샹텐의 양면 유효패
+    if (shanten == 1) {
+        ukeireMaisuu1 = ryanmenTiles.length * 4; // 손패만을 고려했을 때의 유효패 개수
+        ukeireMaisuu2 = ryanmenTiles.length * 4; // 도라 표시패와 강까지 고려했을 때의 유효패 개수
+        span.appendChild(document.createElement('p'));
+        for (let i = 0; i < ryanmenTiles.length; i++) {
+            const img = document.createElement('img');
+            img.setAttribute('src', 'img/' + ryanmenTiles[i] + '.png');
+            img.setAttribute('height', '40px');
+            img.setAttribute('width', '30px');
+            span.appendChild(img);
+            ukeireMaisuu1 -= handTilesNum[types.indexOf(ryanmenTiles[i].charAt(1))][ryanmenTiles[i].charAt(0) - 1];
+            ukeireMaisuu2 -= openedTilesNum[types.indexOf(ryanmenTiles[i].charAt(1))][ryanmenTiles[i].charAt(0) - 1];
+        }
+        span.appendChild(document.createElement('p'));
+        span.appendChild(getTermElement(6));
+        span.innerHTML += ': ' + ukeireMaisuu1;
+        span.appendChild(getTermElement(8));
+        span.appendChild(document.createElement('p'));
+        span.appendChild(getTermElement(7));
+        span.innerHTML += ': ' + ukeireMaisuu2;
+        span.appendChild(getTermElement(8));
+    } */
 
     calculatedTile[index] = 1;
 }
 
+// 유효패 계산 함수
 const calculateTilesForNextShanten = (newHand, nextShanten) => {
     const validTiles = [];
+    const ryanmenTiles = [];
 
     for (let type = 0; type < 4; type++) {
         for (let num = 0; (type < 3 && num < 9) || (type == 3 && num < 7); num++) {
@@ -272,14 +301,17 @@ const calculateTilesForNextShanten = (newHand, nextShanten) => {
             newHand.push((num + 1) + types[type]);
             if (calculateShanten(newHand) == nextShanten) { // 유효패일 때
                 validTiles.push(newHand.pop());
+                /* if (isLastTaatsuRyanmen) {
+                    ryanmenTiles.push(validTiles[validTiles.length - 1]);
+                } */
             }
             else { // 유효패가 아닐 때
                 newHand.pop();
             }
         }
     }
-
-    return validTiles;
+    
+    return { validTiles: validTiles, ryanmenTiles: ryanmenTiles };
 }
 
 const getTermElement = (index) => {
@@ -300,6 +332,7 @@ const printDora = () => {
     td.appendChild(getTermElement(2));
     tr.appendChild(td);
 
+    // 표시된 도라 표시패
     for (let i = 0; i < dora.length; i++) {
         const img = document.createElement('img');
         const td = document.createElement('td');
@@ -309,6 +342,7 @@ const printDora = () => {
         tr.appendChild(td);
     }
 
+    // 표시되지 않은 도라 표시패 = 5 - 표시된 도라 표시패
     for (let i = dora.length; i < 5; i++) {
         const img = document.createElement('img');
         const td = document.createElement('td');
