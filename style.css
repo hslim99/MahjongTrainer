@@ -15,7 +15,7 @@ table {
     border-spacing: 0px;
 }
 td img {
-    display: block;
+    vertical-align: middle;
 }
 #wind, #dora {
     display: inline-block;
