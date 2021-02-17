@@ -169,7 +169,6 @@ const calculateShanten = (newHand) => {
         }
         if (toitsuNum) { kokushiCount++; } // 또이쯔가 있었다면 국사 카운트를 늘림
         shanten = shanten < 13 - kokushiCount ? shanten : 13 - kokushiCount; // 최소 샹텐 수 갱신
-        console.log(kokushiCount);
     }
 
     return shanten;

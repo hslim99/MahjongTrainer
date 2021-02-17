@@ -7,6 +7,25 @@ const types = ['m', 'p', 's', 'z'];
 let openedTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
 let handTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
 let calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+let selected = -1; // for mobile devices
+
+const detectMobile = () => {
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    if (/windows phone/i.test(userAgent)) {
+        return true;
+    }
+
+    if (/android/i.test(userAgent)) {
+        return true;
+    }
+
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream)
+    {
+        return true;
+    } 
+    
+    return false;
+}
 
 const initialize = () => {
     for (let type = 0; type < 4; type++) {
@@ -140,14 +159,36 @@ const printCurrentHand = () => {
         const img = document.createElement('img');
         img.setAttribute('src', 'img/' + hand[i] + '.png');
         img.setAttribute('class', 'selectable');
-        img.setAttribute('onclick', 'discardTile(this)');
-        img.setAttribute('onmouseenter', 'showNextHandInfo(' + i + ')');
-        img.setAttribute('index', i);
+        if (detectMobile()) {
+            img.addEventListener('click', function() { clickForMobile(i) });
+        }
+        else {
+            img.addEventListener('click', function() { discardTile(i); });
+            img.addEventListener('mouseenter', function() { showNextHandInfo(i); });
+        }
 
         const span = document.createElement('span');
         span.setAttribute('class', 'arrow-box');
 
         td.setAttribute('class', 'arrow-container tile');
+        if (detectMobile()) {
+            td.addEventListener('click', function(e) {
+                const td = document.getElementsByClassName('arrow-container');
+                for (let i = 0; i < td.length; i++) {
+                    td[i].setAttribute('class', 'arrow-container tile');
+                }
+                this.setAttribute('class', 'arrow-container tile selected');
+                e.stopPropagation();
+            });
+        }
+        else {
+            td.addEventListener('mouseenter', function() {
+                this.setAttribute('class', 'arrow-container tile selected');
+            });
+            td.addEventListener('mouseleave', function() {
+                this.setAttribute('class', 'arrow-container tile');
+            });
+        }
         td.appendChild(img);
         td.appendChild(span);
         tr.appendChild(td);
@@ -205,10 +246,9 @@ const printCurrentHand = () => {
 }
 
 // 패를 버리면서 버림패를 출력하는 함수
-const discardTile = (a) => {
+const discardTile = (index) => {
     if (kawa.length >= 18) { return; }
 
-    const index = a.getAttribute('index');
     const table = document.getElementById('kawa');
     const td = table.getElementsByTagName('td');
     const img = document.createElement('img');
@@ -287,6 +327,17 @@ const showNextHandInfo = (index) => {
     } */
 
     calculatedTile[index] = 1;
+}
+
+const clickForMobile = (index) => {
+    if (selected != index) {
+        showNextHandInfo(index);
+        selected = index;
+    }
+    else {
+        discardTile(index);
+        selected = -1;
+    }
 }
 
 // 유효패 계산 함수
@@ -381,7 +432,7 @@ const checkKan = () => {
         if (kanCheckHand[i] == kanCheckHand[i + 3]) {
             td[i].innerHTML = '<span class="term">' + terms[4][language] + '</span>';
             td[i].setAttribute('class', 'kan selectable');
-            td[i].setAttribute('onclick', 'callKan(\'' + kanCheckHand[i] + '\')');
+            td[i].addEventListener('click', function() { callKan(kanCheckHand[i]); });
             i += 3;
         }
     }
@@ -392,7 +443,7 @@ const checkKan = () => {
         if (kanCheckHand[i] == kanCheckHand[i + 2] && kanCheckHand[i] == kanCheckHand[kanCheckHand.length - 1]) {
             td[i].innerHTML = '<span class="term">' + terms[4][language] + '</span>';
             td[i].setAttribute('class', 'kan selectable');
-            td[i].setAttribute('onclick', 'callKan(\'' + kanCheckHand[i] + '\')');
+            td[i].addEventListener('click', function() { callKan(kanCheckHand[i]); });
             break;
         }
     }
@@ -443,6 +494,16 @@ const newGame = () => {
     openedTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
     handTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
     calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+    if (detectMobile()) {
+        document.body.addEventListener('click', function() {
+            const td = document.getElementsByClassName('arrow-container');
+            for (let i = 0; i < td.length; i++) {
+                td[i].setAttribute('class', 'arrow-container tile');
+            }
+            selected = -1;
+        });
+    }
 
     initialize();
     getFirstHand();

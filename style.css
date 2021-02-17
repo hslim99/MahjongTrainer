@@ -1,3 +1,10 @@
+html, body, head {
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    margin: 0px 0px;
+    padding: 0px 0px;
+}
 body {
     font-size: 16px;
     font-weight: bold;
@@ -77,6 +84,6 @@ td {
     border-width: 10px;
     content: " ";
 }
-.arrow-container:hover .arrow-box {
+.selected .arrow-box {
     display: block;
 }
