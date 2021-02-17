@@ -39,9 +39,32 @@ const initialize = () => {
         tiles[random] = temp;
     }
 
-    const table = document.getElementById('wind');
+    const windTable = document.getElementById('wind');
     const winds = ['東', '南', '西', '北'];
-    table.innerHTML = '<tr><td><span class="term">' + terms[0][language] + '</span><br>' + winds[Math.floor(Math.random() * 4)] + '</td><td><span class="term">' + terms[1][language] + '</span><br>' + winds[Math.floor(Math.random() * 2)] + '</td></tr>';
+    const tr = document.createElement('tr');
+
+    let td = document.createElement('td');
+    td.appendChild(getTermElement(0));
+    td.innerHTML += '<br><span>' + winds[Math.floor(Math.random() * 4)] + '</span>';
+    tr.appendChild(td);
+    
+    td = document.createElement('td');
+    td.appendChild(getTermElement(1));
+    td.innerHTML += '<br><span>' + winds[Math.floor(Math.random() * 2)] + '</span>';
+    tr.appendChild(td);
+
+    windTable.appendChild(tr);
+
+    const kawaTable = document.getElementById('kawa');
+    for (let i = 0; i < 3; i++) {
+        const tr = document.createElement('tr');
+        for (let j = 0; j < 6; j++) {
+            const td = document.createElement('td');
+            td.setAttribute('class', 'tile-container');
+            tr.appendChild(td);
+        }
+        kawaTable.appendChild(tr);
+    }
 }
 
 // 쯔모한 패를 제외하고 정렬하도록 하는 함수
@@ -99,7 +122,6 @@ const printCurrentHand = () => {
     const table = document.getElementById('hand');
     table.innerHTML = ''
     const tr = document.createElement('tr');
-    const td = [];
 
     handTilesNum.splice(0, handTilesNum.length);
     handTilesNum.push([0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]);
@@ -107,11 +129,11 @@ const printCurrentHand = () => {
     // 테이블의 구조: 정렬된 손패, 쯔모 표시, 쯔모 패, 깡 표시
     // 반복문 1: 손패
     for (let i = 0; i < hand.length; i++) {
-        td.push(document.createElement('td'));
+        const td = document.createElement('td');
 
         if (i == hand.length - 1) {
             const space = document.createElement('td');
-            space.innerHTML = '<span class="term">' + terms[3][language] + '</span>';
+            space.appendChild(getTermElement(3));
             tr.appendChild(space);
         }
 
@@ -125,10 +147,10 @@ const printCurrentHand = () => {
         const span = document.createElement('span');
         span.setAttribute('class', 'arrow-box');
 
-        td[i].setAttribute('class', 'arrow-container');
-        td[i].appendChild(img);
-        td[i].appendChild(span);
-        tr.appendChild(td[i]);
+        td.setAttribute('class', 'arrow-container tile');
+        td.appendChild(img);
+        td.appendChild(span);
+        tr.appendChild(td);
 
         if (hand[i].charAt(0) != 0) {
             handTilesNum[types.indexOf(hand[i].charAt(1))][hand[i].charAt(0) - 1]++;
@@ -140,36 +162,39 @@ const printCurrentHand = () => {
 
     // 반복문 2: 깡 표시
     for (let i = 0; i < kan.length; i++) {
-        const img = [];
+        
+        let img = document.createElement('img');
+        let td = document.createElement('td');
+        img.setAttribute('src', 'img/back.png');
+        td.setAttribute('class', 'tile-container');
+        td.appendChild(img);
+        tr.appendChild(td);
 
-        img.push(document.createElement('img'));
-        td.push(document.createElement('td'));
-        img[0].setAttribute('src', 'img/back.png');
-        td[td.length - 1].appendChild(img[0]);
-        tr.appendChild(td[td.length - 1]);
-
-        img.push(document.createElement('img'));
-        td.push(document.createElement('td'));
+        img = document.createElement('img');
+        td = document.createElement('td');
         if (kan[i].charAt(0) == '5' && kan[i] != '5z') {
-            img[1].setAttribute('src', 'img/0' + kan[i].charAt(1) + '.png');
+            img.setAttribute('src', 'img/0' + kan[i].charAt(1) + '.png');
         }
         else {
-            img[1].setAttribute('src', 'img/' + kan[i] + '.png');
+            img.setAttribute('src', 'img/' + kan[i] + '.png');
         }
-        td[td.length - 1].appendChild(img[1]);
-        tr.appendChild(td[td.length - 1]);
-
-        img.push(document.createElement('img'));
-        td.push(document.createElement('td'));
-        img[2].setAttribute('src', 'img/' + kan[i] + '.png');
-        td[td.length - 1].appendChild(img[2]);
-        tr.appendChild(td[td.length - 1]);
-
-        img.push(document.createElement('img'));
-        td.push(document.createElement('td'));
-        img[3].setAttribute('src', 'img/back.png');
-        td[td.length - 1].appendChild(img[3]);
-        tr.appendChild(td[td.length - 1]);
+        td.setAttribute('class', 'tile-container');
+        td.appendChild(img);
+        tr.appendChild(td);
+        
+        img = document.createElement('img');
+        td = document.createElement('td');
+        img.setAttribute('src', 'img/' + kan[i] + '.png');
+        td.setAttribute('class', 'tile-container');
+        td.appendChild(img);
+        tr.appendChild(td);
+        
+        img = document.createElement('img');
+        td = document.createElement('td');
+        img.setAttribute('src', 'img/back.png');
+        td.setAttribute('class', 'tile-container');
+        td.appendChild(img);
+        tr.appendChild(td);
 
         handTilesNum[types.indexOf(kan[i].charAt(1))][kan[i].charAt(0) - 1]++;
     }
@@ -199,9 +224,6 @@ const discardTile = (a) => {
     countOpenedTiles(open);
 
     printCurrentHand();
-    /* for (let i = 0; i < hand.length; i++) {
-        showNextHandInfo(i);
-    } */
 }
 
 const showNextHandInfo = (index) => {
@@ -216,17 +238,26 @@ const showNextHandInfo = (index) => {
     let ukeireMaisuu1 = validTiles.length * 4; // 손패만을 고려했을 때의 유효패 개수
     let ukeireMaisuu2 = validTiles.length * 4; // 도라 표시패와 강까지 고려했을 때의 유효패 개수
     span.innerHTML = '';
-    span.innerHTML += shanten + '<span class="term">' + terms[5].kr + '</span>';
-    span.innerHTML += '<p>';
+    span.innerHTML += shanten;
+    span.appendChild(getTermElement(5));
+    span.appendChild(document.createElement('p'));
     for (let i = 0; i < validTiles.length; i++) {
-        span.innerHTML += '<img src="img/' + validTiles[i] + '.png" height="40px" width="30px" />';
+        const img = document.createElement('img');
+        img.setAttribute('src', 'img/' + validTiles[i] + '.png');
+        img.setAttribute('height', '40px');
+        img.setAttribute('width', '30px');
+        span.appendChild(img);
         ukeireMaisuu1 -= handTilesNum[types.indexOf(validTiles[i].charAt(1))][validTiles[i].charAt(0) - 1];
         ukeireMaisuu2 -= openedTilesNum[types.indexOf(validTiles[i].charAt(1))][validTiles[i].charAt(0) - 1];
     }
-    span.innerHTML += '<p>';
-    span.innerHTML += '<span class="term">' + terms[6][language] + '</span>: ' + ukeireMaisuu1 + '<span class="term">' + terms[8][language] + '</span>';
-    span.innerHTML += '<p>';
-    span.innerHTML += '<span class="term">' + terms[7][language] + '</span>: ' + ukeireMaisuu2 + '<span class="term">' + terms[8][language] + '</span>';
+    span.appendChild(document.createElement('p'));
+    span.appendChild(getTermElement(6));
+    span.innerHTML += ': ' + ukeireMaisuu1;
+    span.appendChild(getTermElement(8));
+    span.appendChild(document.createElement('p'));
+    span.appendChild(getTermElement(7));
+    span.innerHTML += ': ' + ukeireMaisuu1;
+    span.appendChild(getTermElement(8));
 
     calculatedTile[index] = 1;
 }
@@ -251,23 +282,41 @@ const calculateTilesForNextShanten = (newHand, nextShanten) => {
     return validTiles;
 }
 
+const getTermElement = (index) => {
+    const span = document.createElement('span');
+    span.setAttribute('class', 'term');
+    span.innerHTML = terms[index][language];
+    
+    return span;
+}
+
 const printDora = () => {
     const table = document.getElementById('dora');
-    const td = table.getElementsByTagName('td');
+    table.innerHTML = '';
+    
+    const tr = document.createElement('tr');
 
-    table.innerHTML = '<tr><td><span class="term">' + terms[2][language] + '</span></td><td /><td /><td /><td /><td /></tr>';
+    let td = document.createElement('td');
+    td.appendChild(getTermElement(2));
+    tr.appendChild(td);
 
     for (let i = 0; i < dora.length; i++) {
         const img = document.createElement('img');
+        const td = document.createElement('td');
         img.setAttribute('src', 'img/' + dora[i] + '.png');
-        td[i + 1].appendChild(img);
+        td.setAttribute('class', 'tile-container');
+        td.appendChild(img);
+        tr.appendChild(td);
     }
 
     for (let i = dora.length; i < 5; i++) {
         const img = document.createElement('img');
+        const td = document.createElement('td');
         img.setAttribute('src', 'img/back.png');
-        td[i + 1].appendChild(img);
+        td.appendChild(img);
+        tr.appendChild(td);
     }
+    table.appendChild(tr);
 }
 
 const checkKan = () => {
@@ -346,12 +395,27 @@ const callKan = (tile) => {
     printDora();
 }
 
-window.onload = function() {
+const newGame = () => {
+    const windTable = document.getElementById('wind');
+    windTable.innerHTML = '';
+    const kawaTable = document.getElementById('kawa');
+    kawaTable.innerHTML = '';
+
+    tiles.splice(0);
+    hand.splice(0);
+    kawa.splice(0);
+    dora.splice(0);
+    kan.splice(0);
+    openedTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
+    handTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
+    calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
     initialize();
     getFirstHand();
     printCurrentHand();
     printDora();
-    /* for (let i = 0; i < hand.length; i++) {
-        showNextHandInfo(i);
-    } */
+}
+
+window.onload = function() {
+    newGame();
 }

@@ -20,12 +20,17 @@ table {
 #game-info {
     text-align: center;
 }
+#restart {
+    cursor: pointer;
+}
 h1 {
     text-align: center;
 }
 td {
     text-align: center;
-    padding: 0px;
+    vertical-align: middle;
+    margin: 0px 0px;
+    padding: 0px 0px;
     width: 60px;
     height: 80px;
 }

@@ -15,17 +15,13 @@
         <span onclick="switchLanguage('jp');">日本語</span>
     </div>
     <div id="game-info">
-        <table id="wind">
-        </table>
-        <table id="dora" ondragstart="return false">
-        </table>
+        <table id="wind"></table>
+        <table id="dora" ondragstart="return false"></table>
+        <span id="restart" ondragstart="return false">
+            <img src="img/restart.png" onclick="newGame();"></img>
+        </span>
     </div>
-    <table id="hand" ondragstart="return false">
-    </table>
-    <table id="kawa" ondragstart="return false">
-        <tr><td /><td /><td /><td /><td /><td /></tr>
-        <tr><td /><td /><td /><td /><td /><td /></tr>
-        <tr><td /><td /><td /><td /><td /><td /></tr>
-    </table>
+    <table id="hand" ondragstart="return false"></table>
+    <table id="kawa" ondragstart="return false"></table>
 </body>
 </html>
