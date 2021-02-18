@@ -47,10 +47,13 @@ td {
     width: 60px;
     height: 80px;
 }
-.kan {
+div.selectable {
+    width: 60px;
+    height: 80px;
+    vertical-align: middle;
+    display: table-cell;
     border-radius: 10px;
     background-color: pink;
-    z-index: -1;
 }
 .selectable:hover {
     filter: brightness(0.85);
@@ -85,4 +88,5 @@ td {
 }
 .arrow-container:hover .arrow-box, .selected .arrow-box {
     display: block;
+    z-index: 1;
 }

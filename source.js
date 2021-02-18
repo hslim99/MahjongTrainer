@@ -51,12 +51,12 @@ const initialize = () => {
         }
     }
     
-    for (let i = 0; i < tiles.length; i++) {
+    /* for (let i = 0; i < tiles.length; i++) {
         let random = Math.floor(Math.random() * (tiles.length - i)) + i; // i 이상 tiles.length 미만의 난수 생성
         const temp = tiles[i];
         tiles[i] = tiles[random];
         tiles[random] = temp;
-    }
+    } */
 
     const windTable = document.getElementById('wind');
     const winds = ['東', '南', '西', '北'];
@@ -127,13 +127,11 @@ const getFirstHand = () => {
     dora.push(open);
     countOpenedTiles(open);
 
-    /* for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 14; i++) {
         open = tiles.pop();
         hand.push(open);
         countOpenedTiles(open);
-    } */
-
-    hand.push('1m','1m','1m','1m','3m','3m','3m','3m','1p','1p','1p','9p','9p','9p');
+    }
 }
 
 const printCurrentHand = () => {
@@ -373,7 +371,7 @@ const discardForMobile = (index) => {
 }
 
 const kanForMobile = (index) => {
-    if (selected != 100 + index) {
+    if (selected != (100 + index)) {
         showNextHandInfo(index, true);
         selected = 100 + index;
     }
@@ -474,20 +472,22 @@ const checkKan = () => {
     for (let i = 0; i < kanCheckHand.length - 4; i++) {
         // 정렬된 패이므로 양 끝 두 장만 체크하면 됨
         if (kanCheckHand[i] == kanCheckHand[i + 3]) {
-            td[i].appendChild(getTermElement(4));
+            const div = document.createElement('div');
+            div.classList.add('selectable');
+            div.appendChild(getTermElement(4));
 
             if (detectMobile()) {
-                td[i].addEventListener('click', function() { kanForMobile(i); });
+                div.addEventListener('click', function() { kanForMobile(i); });
             }
             else {
-                td[i].addEventListener('click', function() { callKan(i); });
-                td[i].addEventListener('mouseenter', function() { showNextHandInfo(i, true); });
+                div.addEventListener('click', function() { callKan(i); });
+                div.addEventListener('mouseenter', function() { showNextHandInfo(i, true); });
             }
 
             const span = document.createElement('span');
             span.setAttribute('class', 'arrow-box');
 
-            td[i].setAttribute('class', 'kan selectable arrow-container');
+            td[i].setAttribute('class', 'arrow-container kan');
             if (detectMobile()) {
                 td[i].addEventListener('click', function(e) {
                     const td = document.getElementsByClassName('arrow-container');
@@ -498,6 +498,8 @@ const checkKan = () => {
                     e.stopPropagation();
                 });
             }
+
+            td[i].appendChild(div);
             td[i].appendChild(span);
             //i += 3;
         }
@@ -507,22 +509,24 @@ const checkKan = () => {
     for (let i = 0; i < kanCheckHand.length - 3; i++) {
         // 정렬된 패이므로 양 끝 두 장만 체크하면 됨
         if (kanCheckHand[i] == kanCheckHand[i + 2] && kanCheckHand[i] == kanCheckHand[kanCheckHand.length - 1]) {
-            td[i].appendChild(getTermElement(4));
+            const div = document.createElement('div');
+            div.classList.add('selectable');
+            div.appendChild(getTermElement(4));
 
             if (detectMobile()) {
-                td[i].addEventListener('click', function() { kanForMobile(i); });
+                div.addEventListener('click', function() { kanForMobile(i); });
             }
             else {
-                td[i].addEventListener('click', function() { callKan(i); });
-                td[i].addEventListener('mouseenter', function() { showNextHandInfo(i, true); });
+                div.addEventListener('click', function() { callKan(i); });
+                div.addEventListener('mouseenter', function() { showNextHandInfo(i, true); });
             }
 
             const span = document.createElement('span');
             span.setAttribute('class', 'arrow-box');
 
-            td[i].setAttribute('class', 'kan selectable arrow-container');
+            td[i].setAttribute('class', 'arrow-container kan');
             if (detectMobile()) {
-                td[i].addEventListener('click', function(e) {
+                div.addEventListener('click', function(e) {
                     const td = document.getElementsByClassName('arrow-container');
                     for (let i = 0; i < td.length; i++) {
                         td[i].classList.remove('selected');
@@ -531,6 +535,8 @@ const checkKan = () => {
                     e.stopPropagation();
                 });
             }
+
+            td[i].appendChild(div);
             td[i].appendChild(span);
             break;
         }
