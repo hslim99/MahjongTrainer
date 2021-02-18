@@ -6,6 +6,7 @@ let taatsuNum = 0;
 let shanten = 6;
 let isolatedMentsuNum = 0;
 let isLastTaatsuRyanmen = false;
+let adjustment = 0;
 
 const calculateShanten = (newHand) => {
     tilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
@@ -42,6 +43,17 @@ const calculateShanten = (newHand) => {
                 toitsuTile.splice(0, toitsuTile.length);
                 mentsuNum = kan.length;
                 taatsuNum = 0;
+                adjustment = 0;
+
+                // 5장째의 단기 대기를 하는 경우 방지 1 
+                for (let _type = 0; _type < 4; _type++) {
+                    for (let _num = 0; (_type < 3 && _num < 9) || (_type == 3 && _num < 7); _num++) {
+                        if (tilesNum[_type][_num] == 1 && _tilesNumForSpecialHand[_type][_num] == 4) {
+                            tilesNum[_type][_num] = 0;
+                            adjustment = 1;
+                        }
+                    }
+                }
 
                 if (tilesNum[type][num] >= 2) { // (type, num)에 머리가 있다고 판단
                     tilesNum[type][num] -= 2; // (type, num)에서 머리를 뺀다
@@ -52,7 +64,17 @@ const calculateShanten = (newHand) => {
                     checkMentsuTaatsu1(1, addend); // 통수의 멘쯔와 타쯔 체크
                     checkMentsuTaatsu1(2, addend); // 삭수의 멘쯔와 타쯔 체크
                     checkCharactersMentsuTaatsu(); // 자패의 멘쯔와 타쯔 체크
-                    shanten = shanten < shantenFormula() ? shanten : shantenFormula(); // 최소 샹텐 수 갱신
+
+                    // 5장째의 단기 대기를 하는 경우 방지 2
+                    for (let _type = 0; _type < 4; _type++) {
+                        for (let _num = 0; (_type < 3 && _num < 9) || (_type == 3 && _num < 7); _num++) {
+                            if (tilesNum[_type][_num] == 1) {
+                                adjustment = 0;
+                            }
+                        }
+                    }
+
+                    shanten = shanten < shantenFormula() + adjustment ? shanten : shantenFormula() + adjustment; // 최소 샹텐 수 갱신
                 }
             }
         }
@@ -67,6 +89,17 @@ const calculateShanten = (newHand) => {
                 toitsuTile.splice(0, toitsuTile.length);
                 mentsuNum = kan.length;
                 taatsuNum = 0;
+                adjustment = 0;
+
+                // 5장째의 단기 대기를 하는 경우 방지 1 
+                for (let _type = 0; _type < 4; _type++) {
+                    for (let _num = 0; (_type < 3 && _num < 9) || (_type == 3 && _num < 7); _num++) {
+                        if (tilesNum[_type][_num] == 1 && _tilesNumForSpecialHand[_type][_num] == 4) {
+                            tilesNum[_type][_num] = 0;
+                            adjustment = 1;
+                        }
+                    }
+                }
 
                 if (tilesNum[type][num] >= 2) { // (type, num)에 머리가 있다고 판단
                     tilesNum[type][num] -= 2; // (type, num)에서 머리를 뺀다
@@ -77,10 +110,17 @@ const calculateShanten = (newHand) => {
                     checkMentsuTaatsu2(1, addend); // 통수의 멘쯔와 타쯔 체크
                     checkMentsuTaatsu2(2, addend); // 삭수의 멘쯔와 타쯔 체크
                     checkCharactersMentsuTaatsu(); // 자패의 멘쯔와 타쯔 체크
-                    shanten = shanten < shantenFormula() ? shanten : shantenFormula(); // 최소 샹텐 수 갱신
-                    if (shanten) {
-                        isLastTaatsuRyanmen = false;
+
+                    // 5장째의 단기 대기를 하는 경우 방지 2
+                    for (let _type = 0; _type < 4; _type++) {
+                        for (let _num = 0; (_type < 3 && _num < 9) || (_type == 3 && _num < 7); _num++) {
+                            if (tilesNum[_type][_num] == 1) {
+                                adjustment = 0;
+                            }
+                        }
                     }
+
+                    shanten = shanten < shantenFormula() + adjustment ? shanten : shantenFormula() + adjustment; // 최소 샹텐 수 갱신
                 }
             }
         }
@@ -95,22 +135,33 @@ const calculateShanten = (newHand) => {
                 toitsuTile.splice(0, toitsuTile.length);
                 mentsuNum = kan.length;
                 taatsuNum = 0;
+                adjustment = 0;
+
+                // 5장째의 단기 대기를 하는 경우 방지 1 
+                for (let _type = 0; _type < 4; _type++) {
+                    for (let _num = 0; (_type < 3 && _num < 9) || (_type == 3 && _num < 7); _num++) {
+                        if (tilesNum[_type][_num] == 1 && _tilesNumForSpecialHand[_type][_num] == 4) {
+                            tilesNum[_type][_num] = 0;
+                            adjustment = 1;
+                        }
+                    }
+                }
 
                 checkMentsuTaatsu1(0, addend); // 만수의 멘쯔와 타쯔 체크
                 checkMentsuTaatsu1(1, addend); // 통수의 멘쯔와 타쯔 체크
                 checkMentsuTaatsu1(2, addend); // 삭수의 멘쯔와 타쯔 체크
                 checkCharactersMentsuTaatsu(); // 자패의 멘쯔와 타쯔 체크
 
-                // 5장째의 단기 대기를 하는 경우 방지
+                // 5장째의 단기 대기를 하는 경우 방지 2
                 for (let _type = 0; _type < 4; _type++) {
                     for (let _num = 0; (_type < 3 && _num < 9) || (_type == 3 && _num < 7); _num++) {
-                        if (tilesNum[_type][_num] == 1 && _tilesNum[_type][_num] == 4) {
-                            taatsuNum--;
+                        if (tilesNum[_type][_num] == 1) {
+                            adjustment = 0;
                         }
                     }
                 }
 
-                shanten = shanten < shantenFormula() ? shanten : shantenFormula(); // 최소 샹텐 수 갱신
+                shanten = shanten < shantenFormula() + adjustment ? shanten : shantenFormula() + adjustment; // 최소 샹텐 수 갱신
             }
         }
     }
@@ -337,19 +388,31 @@ const checkIsolatedMentsu = () => {
     for (let type = 0; type < 3; type++) {
         for (let num = 0; num < 9; num++) {
             if (num == 0) { // 111 커쯔
-                if (tilesNum[type][num] == 3 && !tilesNum[type][num + 1]) {
+                if (tilesNum[type][num] >= 3 && !tilesNum[type][num + 1] && !tilesNum[type][num + 2]) {
                     tilesNum[type][num] -= 3;
                     isolatedMentsuNum++;
                 }
             }
-            else if (0 < num && num <= 7) { // 222~888 커쯔
-                if (!tilesNum[type][num - 1] && tilesNum[type][num] == 3 && !tilesNum[type][num + 1]) {
+            else if (num == 1) { // 222 커쯔
+                if (!tilesNum[type][num - 1] && tilesNum[type][num] >= 3 && !tilesNum[type][num + 1] && !tilesNum[type][num + 2]) {
+                    tilesNum[type][num] -= 3;
+                    isolatedMentsuNum++;
+                }
+            }
+            else if (1 < num && num <= 6) { // 333~777 커쯔
+                if (!tilesNum[type][num - 2] && !tilesNum[type][num - 1] && tilesNum[type][num] >= 3 && !tilesNum[type][num + 1] && !tilesNum[type][num + 2]) {
+                    tilesNum[type][num] -= 3;
+                    isolatedMentsuNum++;
+                }
+            }
+            else if (num == 7) { // 888 커쯔
+                if (!tilesNum[type][num - 2] && !tilesNum[type][num - 1] && tilesNum[type][num] >= 3 && !tilesNum[type][num + 1]) {
                     tilesNum[type][num] -= 3;
                     isolatedMentsuNum++;
                 }
             }
             else { // 999 커쯔
-                if (!tilesNum[type][num - 1] && tilesNum[type][num] == 3) {
+                if (!tilesNum[type][num - 2] && !tilesNum[type][num - 1] && tilesNum[type][num] >= 3) {
                     tilesNum[type][num] -= 3;
                     isolatedMentsuNum++;
                 }
@@ -359,7 +422,7 @@ const checkIsolatedMentsu = () => {
 
     // 고립된 자패 커쯔 체크
     for (let num = 0; num < 7; num++) {
-        if (tilesNum[3][num] == 3) {
+        if (tilesNum[3][num] >= 3) {
             tilesNum[3][num] -= 3;
             isolatedMentsuNum++;
         }

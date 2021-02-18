@@ -50,8 +50,7 @@ td {
 .kan {
     border-radius: 10px;
     background-color: pink;
-    font-size: 20px;
-    font-weight: bold;
+    z-index: -1;
 }
 .selectable:hover {
     filter: brightness(0.85);
@@ -84,6 +83,6 @@ td {
     border-width: 10px;
     content: " ";
 }
-.selected .arrow-box {
+.arrow-container:hover .arrow-box, .selected .arrow-box {
     display: block;
 }

@@ -127,11 +127,13 @@ const getFirstHand = () => {
     dora.push(open);
     countOpenedTiles(open);
 
-    for (let i = 0; i < 14; i++) {
+    /* for (let i = 0; i < 14; i++) {
         open = tiles.pop();
         hand.push(open);
         countOpenedTiles(open);
-    }
+    } */
+
+    hand.push('1m','1m','1m','1m','3m','3m','3m','3m','1p','1p','1p','9p','9p','9p');
 }
 
 const printCurrentHand = () => {
@@ -160,11 +162,11 @@ const printCurrentHand = () => {
         img.setAttribute('src', 'img/' + hand[i] + '.png');
         img.setAttribute('class', 'selectable');
         if (detectMobile()) {
-            img.addEventListener('click', function() { clickForMobile(i) });
+            img.addEventListener('click', function() { discardForMobile(i); });
         }
         else {
             img.addEventListener('click', function() { discardTile(i); });
-            img.addEventListener('mouseenter', function() { showNextHandInfo(i); });
+            img.addEventListener('mouseenter', function() { showNextHandInfo(i, false); });
         }
 
         const span = document.createElement('span');
@@ -175,18 +177,10 @@ const printCurrentHand = () => {
             td.addEventListener('click', function(e) {
                 const td = document.getElementsByClassName('arrow-container');
                 for (let i = 0; i < td.length; i++) {
-                    td[i].setAttribute('class', 'arrow-container tile');
+                    td[i].classList.remove('selected');
                 }
-                this.setAttribute('class', 'arrow-container tile selected');
+                this.classList.add('selected');
                 e.stopPropagation();
-            });
-        }
-        else {
-            td.addEventListener('mouseenter', function() {
-                this.setAttribute('class', 'arrow-container tile selected');
-            });
-            td.addEventListener('mouseleave', function() {
-                this.setAttribute('class', 'arrow-container tile');
             });
         }
         td.appendChild(img);
@@ -267,22 +261,54 @@ const discardTile = (index) => {
     printCurrentHand();
 }
 
-const showNextHandInfo = (index) => {
-    if (calculatedTile[index]) { return; }
+const showNextHandInfo = (index, kanFlag) => {
     const newHand = [...hand];
 
-    newHand.splice(index, 1);
+    if (!kanFlag) {
+        if (calculatedTile[index] == 1 || calculatedTile[index] == 3) { return; }
+
+        newHand.splice(index, 1);
+    }
+    else {
+        if (calculatedTile[index] == 2 || calculatedTile[index] == 3) { return; }
+        const tile = newHand[index];
+
+        // 깡을 선언한 네 개의 패를 제거함
+        if (tile.charAt(0) == '0') {
+            newHand.splice(newHand.indexOf(tile), 1);
+            newHand.splice(newHand.indexOf('5' + tile.charAt(1)), 1);
+            newHand.splice(newHand.indexOf('5' + tile.charAt(1)), 1);
+            newHand.splice(newHand.indexOf('5' + tile.charAt(1)), 1);
+        }
+        else {
+            newHand.splice(newHand.indexOf(tile), 1);
+            newHand.splice(newHand.indexOf(tile), 1);
+            newHand.splice(newHand.indexOf(tile), 1);
+            newHand.splice(newHand.indexOf(tile), 1);
+        }
+    
+        kan.push(tile);
+    }
+
     const shanten = calculateShanten(newHand);
     const validTiles = calculateTilesForNextShanten(newHand, shanten - 1).validTiles;
     /* const ryanmenTiles = calculateTilesForNextShanten(newHand, shanten - 1).ryanmenTiles; */
 
     // 기본 유효패
-    const span = document.getElementsByClassName('arrow-box')[index];
+    const table = document.getElementById('hand');
+    const tr = table.getElementsByTagName('tr')[!kanFlag ? 0 : 1];
+    const td = tr.getElementsByTagName('td')[index < hand.length - 1 ? index : index + 1];
+    const span = td.lastChild;
     let ukeireMaisuu1 = validTiles.length * 4; // 손패만을 고려했을 때의 유효패 개수
     let ukeireMaisuu2 = validTiles.length * 4; // 도라 표시패와 강까지 고려했을 때의 유효패 개수
     span.innerHTML = '';
-    span.innerHTML += shanten;
-    span.appendChild(getTermElement(5));
+    if (shanten) {
+        span.innerHTML += shanten;
+        span.appendChild(getTermElement(5));
+    }
+    else {
+        span.appendChild(getTermElement(6));
+    }
     span.appendChild(document.createElement('p'));
     for (let i = 0; i < validTiles.length; i++) {
         const img = document.createElement('img');
@@ -294,13 +320,13 @@ const showNextHandInfo = (index) => {
         ukeireMaisuu2 -= openedTilesNum[types.indexOf(validTiles[i].charAt(1))][validTiles[i].charAt(0) - 1];
     }
     span.appendChild(document.createElement('p'));
-    span.appendChild(getTermElement(6));
-    span.innerHTML += ': ' + ukeireMaisuu1;
-    span.appendChild(getTermElement(8));
-    span.appendChild(document.createElement('p'));
     span.appendChild(getTermElement(7));
-    span.innerHTML += ': ' + ukeireMaisuu2;
+    span.innerHTML += ': ' + ukeireMaisuu1;
+    span.appendChild(getTermElement(9));
+    span.appendChild(document.createElement('p'));
     span.appendChild(getTermElement(8));
+    span.innerHTML += ': ' + ukeireMaisuu2;
+    span.appendChild(getTermElement(9));
 
     /* // 이샹텐의 양면 유효패
     if (shanten == 1) {
@@ -317,25 +343,42 @@ const showNextHandInfo = (index) => {
             ukeireMaisuu2 -= openedTilesNum[types.indexOf(ryanmenTiles[i].charAt(1))][ryanmenTiles[i].charAt(0) - 1];
         }
         span.appendChild(document.createElement('p'));
-        span.appendChild(getTermElement(6));
-        span.innerHTML += ': ' + ukeireMaisuu1;
-        span.appendChild(getTermElement(8));
-        span.appendChild(document.createElement('p'));
         span.appendChild(getTermElement(7));
-        span.innerHTML += ': ' + ukeireMaisuu2;
+        span.innerHTML += ': ' + ukeireMaisuu1;
+        span.appendChild(getTermElement(9));
+        span.appendChild(document.createElement('p'));
         span.appendChild(getTermElement(8));
+        span.innerHTML += ': ' + ukeireMaisuu2;
+        span.appendChild(getTermElement(9));
     } */
 
-    calculatedTile[index] = 1;
+    if (!kanFlag) {
+        calculatedTile[index]++;
+    }
+    else {
+        calculatedTile[index] += 2;
+        kan.pop();
+    }
 }
 
-const clickForMobile = (index) => {
+const discardForMobile = (index) => {
     if (selected != index) {
-        showNextHandInfo(index);
+        showNextHandInfo(index, false);
         selected = index;
     }
     else {
         discardTile(index);
+        selected = -1;
+    }
+}
+
+const kanForMobile = (index) => {
+    if (selected != 100 + index) {
+        showNextHandInfo(index, true);
+        selected = 100 + index;
+    }
+    else {
+        callKan(index);
         selected = -1;
     }
 }
@@ -347,7 +390,8 @@ const calculateTilesForNextShanten = (newHand, nextShanten) => {
 
     for (let type = 0; type < 4; type++) {
         for (let num = 0; (type < 3 && num < 9) || (type == 3 && num < 7); num++) {
-            if (openedTilesNum[type][num] >= 4) { continue; } // 이미 4장을 뽑은 패는 유효패를 계산하지 않음
+            //if (openedTilesNum[type][num] >= 4) { continue; } // 이미 4장을 뽑은 패는 유효패를 계산하지 않음
+            if (handTilesNum[type][num] >= 4) { continue; } // 두 가지의 유효패 계산식이 있어서 위 한 줄 대신 이것으로 대체
 
             newHand.push((num + 1) + types[type]);
             if (calculateShanten(newHand) == nextShanten) { // 유효패일 때
@@ -430,10 +474,32 @@ const checkKan = () => {
     for (let i = 0; i < kanCheckHand.length - 4; i++) {
         // 정렬된 패이므로 양 끝 두 장만 체크하면 됨
         if (kanCheckHand[i] == kanCheckHand[i + 3]) {
-            td[i].innerHTML = '<span class="term">' + terms[4][language] + '</span>';
-            td[i].setAttribute('class', 'kan selectable');
-            td[i].addEventListener('click', function() { callKan(kanCheckHand[i]); });
-            i += 3;
+            td[i].appendChild(getTermElement(4));
+
+            if (detectMobile()) {
+                td[i].addEventListener('click', function() { kanForMobile(i); });
+            }
+            else {
+                td[i].addEventListener('click', function() { callKan(i); });
+                td[i].addEventListener('mouseenter', function() { showNextHandInfo(i, true); });
+            }
+
+            const span = document.createElement('span');
+            span.setAttribute('class', 'arrow-box');
+
+            td[i].setAttribute('class', 'kan selectable arrow-container');
+            if (detectMobile()) {
+                td[i].addEventListener('click', function(e) {
+                    const td = document.getElementsByClassName('arrow-container');
+                    for (let i = 0; i < td.length; i++) {
+                        td[i].classList.remove('selected');
+                    }
+                    this.classList.add('selected');
+                    e.stopPropagation();
+                });
+            }
+            td[i].appendChild(span);
+            //i += 3;
         }
     }
 
@@ -441,9 +507,31 @@ const checkKan = () => {
     for (let i = 0; i < kanCheckHand.length - 3; i++) {
         // 정렬된 패이므로 양 끝 두 장만 체크하면 됨
         if (kanCheckHand[i] == kanCheckHand[i + 2] && kanCheckHand[i] == kanCheckHand[kanCheckHand.length - 1]) {
-            td[i].innerHTML = '<span class="term">' + terms[4][language] + '</span>';
-            td[i].setAttribute('class', 'kan selectable');
-            td[i].addEventListener('click', function() { callKan(kanCheckHand[i]); });
+            td[i].appendChild(getTermElement(4));
+
+            if (detectMobile()) {
+                td[i].addEventListener('click', function() { kanForMobile(i); });
+            }
+            else {
+                td[i].addEventListener('click', function() { callKan(i); });
+                td[i].addEventListener('mouseenter', function() { showNextHandInfo(i, true); });
+            }
+
+            const span = document.createElement('span');
+            span.setAttribute('class', 'arrow-box');
+
+            td[i].setAttribute('class', 'kan selectable arrow-container');
+            if (detectMobile()) {
+                td[i].addEventListener('click', function(e) {
+                    const td = document.getElementsByClassName('arrow-container');
+                    for (let i = 0; i < td.length; i++) {
+                        td[i].classList.remove('selected');
+                    }
+                    this.classList.add('selected');
+                    e.stopPropagation();
+                });
+            }
+            td[i].appendChild(span);
             break;
         }
     }
@@ -454,17 +542,21 @@ const checkKan = () => {
     table.appendChild(tr);
 }
 
-const callKan = (tile) => {
+const callKan = (index) => {
+    const tile = hand[index];
     // 깡을 선언한 네 개의 패를 제거함
-    if (tile.charAt(0) == '5' && tile != '5z') {
-        hand.splice(hand.indexOf('0' + tile.charAt(1)), 1);
+    if (tile.charAt(0) == '0') {
+        hand.splice(hand.indexOf(tile), 1);
+        hand.splice(hand.indexOf('5' + tile.charAt(1)), 1);
+        hand.splice(hand.indexOf('5' + tile.charAt(1)), 1);
+        hand.splice(hand.indexOf('5' + tile.charAt(1)), 1);
     }
     else {
         hand.splice(hand.indexOf(tile), 1);
+        hand.splice(hand.indexOf(tile), 1);
+        hand.splice(hand.indexOf(tile), 1);
+        hand.splice(hand.indexOf(tile), 1);
     }
-    hand.splice(hand.indexOf(tile), 1);
-    hand.splice(hand.indexOf(tile), 1);
-    hand.splice(hand.indexOf(tile), 1);
 
     kan.push(tile);
     let open = tiles.pop();
