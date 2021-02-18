@@ -51,12 +51,12 @@ const initialize = () => {
         }
     }
     
-    /* for (let i = 0; i < tiles.length; i++) {
+    for (let i = 0; i < tiles.length; i++) {
         let random = Math.floor(Math.random() * (tiles.length - i)) + i; // i 이상 tiles.length 미만의 난수 생성
         const temp = tiles[i];
         tiles[i] = tiles[random];
         tiles[random] = temp;
-    } */
+    }
 
     const windTable = document.getElementById('wind');
     const winds = ['東', '南', '西', '北'];
@@ -79,7 +79,8 @@ const initialize = () => {
         const tr = document.createElement('tr');
         for (let j = 0; j < 6; j++) {
             const td = document.createElement('td');
-            td.setAttribute('class', 'tile-container');
+            td.classList.add('tile-container');
+            //td.setAttribute('class', 'tile-container');
             tr.appendChild(td);
         }
         kawaTable.appendChild(tr);
@@ -158,7 +159,8 @@ const printCurrentHand = () => {
 
         const img = document.createElement('img');
         img.setAttribute('src', 'img/' + hand[i] + '.png');
-        img.setAttribute('class', 'selectable');
+        img.classList.add('selectable');
+        //img.setAttribute('class', 'selectable');
         if (detectMobile()) {
             img.addEventListener('click', function() { discardForMobile(i); });
         }
@@ -168,9 +170,12 @@ const printCurrentHand = () => {
         }
 
         const span = document.createElement('span');
-        span.setAttribute('class', 'arrow-box');
+        span.classList.add('arrow-box');
+        //span.setAttribute('class', 'arrow-box');
 
-        td.setAttribute('class', 'arrow-container tile');
+        td.classList.add('arrow-container');
+        td.classList.add('tile');
+        //td.setAttribute('class', 'arrow-container tile');
         if (detectMobile()) {
             td.addEventListener('click', function(e) {
                 const td = document.getElementsByClassName('arrow-container');
@@ -199,7 +204,8 @@ const printCurrentHand = () => {
         let img = document.createElement('img');
         let td = document.createElement('td');
         img.setAttribute('src', 'img/back.png');
-        td.setAttribute('class', 'tile-container');
+        td.classList.add('tile-container');
+        //td.setAttribute('class', 'tile-container');
         td.appendChild(img);
         tr.appendChild(td);
 
@@ -211,21 +217,24 @@ const printCurrentHand = () => {
         else {
             img.setAttribute('src', 'img/' + kan[i] + '.png');
         }
-        td.setAttribute('class', 'tile-container');
+        td.classList.add('tile-container');
+        //td.setAttribute('class', 'tile-container');
         td.appendChild(img);
         tr.appendChild(td);
         
         img = document.createElement('img');
         td = document.createElement('td');
         img.setAttribute('src', 'img/' + kan[i] + '.png');
-        td.setAttribute('class', 'tile-container');
+        td.classList.add('tile-container');
+        //td.setAttribute('class', 'tile-container');
         td.appendChild(img);
         tr.appendChild(td);
         
         img = document.createElement('img');
         td = document.createElement('td');
         img.setAttribute('src', 'img/back.png');
-        td.setAttribute('class', 'tile-container');
+        td.classList.add('tile-container');
+        //td.setAttribute('class', 'tile-container');
         td.appendChild(img);
         tr.appendChild(td);
 
@@ -409,7 +418,8 @@ const calculateTilesForNextShanten = (newHand, nextShanten) => {
 
 const getTermElement = (index) => {
     const span = document.createElement('span');
-    span.setAttribute('class', 'term');
+    span.classList.add('term');
+    //span.setAttribute('class', 'term');
     span.innerHTML = terms[index][language];
     
     return span;
@@ -430,7 +440,8 @@ const printDora = () => {
         const img = document.createElement('img');
         const td = document.createElement('td');
         img.setAttribute('src', 'img/' + dora[i] + '.png');
-        td.setAttribute('class', 'tile-container');
+        td.classList.add('tile.container');
+        //td.setAttribute('class', 'tile-container');
         td.appendChild(img);
         tr.appendChild(td);
     }
@@ -485,9 +496,12 @@ const checkKan = () => {
             }
 
             const span = document.createElement('span');
-            span.setAttribute('class', 'arrow-box');
+            span.classList.add('arrow-box');
+            //span.setAttribute('class', 'arrow-box');
 
-            td[i].setAttribute('class', 'arrow-container kan');
+            td[i].classList.add('arrow-container');
+            td[i].classList.add('kan');
+            //td[i].setAttribute('class', 'arrow-container kan');
             if (detectMobile()) {
                 td[i].addEventListener('click', function(e) {
                     const td = document.getElementsByClassName('arrow-container');
@@ -522,9 +536,12 @@ const checkKan = () => {
             }
 
             const span = document.createElement('span');
-            span.setAttribute('class', 'arrow-box');
+            span.classList.add('arrow-box');
+            //span.setAttribute('class', 'arrow-box');
 
-            td[i].setAttribute('class', 'arrow-container kan');
+            td[i].classList.add('arrow-container');
+            td[i].classList.add('kan');
+            //td[i].setAttribute('class', 'arrow-container kan');
             if (detectMobile()) {
                 div.addEventListener('click', function(e) {
                     const td = document.getElementsByClassName('arrow-container');
@@ -597,7 +614,9 @@ const newGame = () => {
         document.body.addEventListener('click', function() {
             const td = document.getElementsByClassName('arrow-container');
             for (let i = 0; i < td.length; i++) {
-                td[i].setAttribute('class', 'arrow-container tile');
+                td[i].classList.add('arrow-container');
+                td[i].classList.add('tile');
+                //td[i].setAttribute('class', 'arrow-container tile');
             }
             selected = -1;
         });
