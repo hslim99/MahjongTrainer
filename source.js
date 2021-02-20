@@ -4,11 +4,15 @@ const kawa = [];
 const dora = [];
 const kan = [];
 const types = ['m', 'p', 's', 'z'];
+const winds = ['東', '南', '西', '北'];
 let openedTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
 let handTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
 let calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 let selected = -1; // for mobile devices
 let numType = -1;
+let myWind = '東';
+let haitei = '南';
+let leftTsumo = 18;
 
 const detectMobile = () => {
     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -68,17 +72,28 @@ const initialize = () => {
         tiles[random] = temp;
     }
 
-    const windTable = document.getElementById('wind');
-    const winds = ['東', '南', '西', '北'];
-    const tr = document.createElement('tr');
-
+    const leftTsumoTable = document.getElementById('left-tsumo');
+    let tr = document.createElement('tr');
     let td = document.createElement('td');
+    let span = document.createElement('span');
+    span.classList.add('left-tsumo-num');
     td.appendChild(getTermElement(0));
-    td.innerHTML += '<br><span class="wind">' + winds[Math.floor(Math.random() * 4)] + '</span>';
+    td.appendChild(span);
+    tr.appendChild(td);
+    leftTsumoTable.appendChild(tr);
+    myWind = winds[Math.floor(Math.random() * 4)];
+    calculateLeftTsumo();
+
+    const windTable = document.getElementById('wind');
+    tr = document.createElement('tr');
+
+    td = document.createElement('td');
+    td.appendChild(getTermElement(1));
+    td.innerHTML += '<br><span class="wind">' + myWind + '</span>';
     tr.appendChild(td);
     
     td = document.createElement('td');
-    td.appendChild(getTermElement(1));
+    td.appendChild(getTermElement(2));
     td.innerHTML += '<br><span class="wind">' + winds[Math.floor(Math.random() * 2)] + '</span>';
     tr.appendChild(td);
 
@@ -162,7 +177,7 @@ const printCurrentHand = () => {
 
         if (i == hand.length - 1) {
             const space = document.createElement('td');
-            space.appendChild(getTermElement(3));
+            space.appendChild(getTermElement(4));
             tr.appendChild(space);
         }
 
@@ -184,6 +199,8 @@ const printCurrentHand = () => {
         td.classList.add('tile');
         if (detectMobile()) {
             td.addEventListener('click', function(e) {
+                if (!optionShanten) { return; }
+
                 const td = document.getElementsByClassName('arrow-container');
                 for (let i = 0; i < td.length; i++) {
                     td[i].classList.remove('selected');
@@ -194,6 +211,8 @@ const printCurrentHand = () => {
         }
         else {
             td.addEventListener('mouseenter', function(e) {
+                if (!optionShanten) { return; }
+
                 const td = document.getElementsByClassName('arrow-container');
                 for (let i = 0; i < td.length; i++) {
                     td[i].classList.remove('selected');
@@ -266,7 +285,8 @@ const printCurrentHand = () => {
 
 // 패를 버리면서 버림패를 출력하는 함수
 const discardTile = (index) => {
-    if (kawa.length >= 18 || !tiles.length) { return; }
+    // 남은 패가 없거나 남은 쯔모가 없으면 계산하지 않음
+    if (!leftTsumo || !tiles.length) { return; }
 
     const table = document.getElementById('kawa');
     const td = table.getElementsByTagName('td');
@@ -283,10 +303,13 @@ const discardTile = (index) => {
     hand[hand.length - 1] = open; // 쯔모
     countOpenedTiles(open);
 
+    calculateLeftTsumo();
     printCurrentHand();
 }
 
 const showNextHandInfo = (index, kanFlag) => {
+    if (!optionShanten) { return; }
+
     const newHand = [...hand];
 
     if (!kanFlag) {
@@ -329,10 +352,10 @@ const showNextHandInfo = (index, kanFlag) => {
     span.innerHTML = '';
     if (shanten) {
         span.innerHTML += shanten;
-        span.appendChild(getTermElement(5));
+        span.appendChild(getTermElement(6));
     }
     else {
-        span.appendChild(getTermElement(6));
+        span.appendChild(getTermElement(7));
     }
     span.appendChild(document.createElement('p'));
     for (let i = 0; i < validTiles.length; i++) {
@@ -345,13 +368,13 @@ const showNextHandInfo = (index, kanFlag) => {
         ukeireMaisuu2 -= openedTilesNum[types.indexOf(validTiles[i].charAt(1))][validTiles[i].charAt(0) - 1];
     }
     span.appendChild(document.createElement('p'));
-    span.appendChild(getTermElement(7));
-    span.innerHTML += ': ' + ukeireMaisuu1;
-    span.appendChild(getTermElement(9));
-    span.appendChild(document.createElement('p'));
     span.appendChild(getTermElement(8));
-    span.innerHTML += ': ' + ukeireMaisuu2;
+    span.innerHTML += ': ' + ukeireMaisuu1;
+    span.appendChild(getTermElement(10));
+    span.appendChild(document.createElement('p'));
     span.appendChild(getTermElement(9));
+    span.innerHTML += ': ' + ukeireMaisuu2;
+    span.appendChild(getTermElement(10));
 
     /* // 이샹텐의 양면 유효패
     if (shanten == 1) {
@@ -368,13 +391,13 @@ const showNextHandInfo = (index, kanFlag) => {
             ukeireMaisuu2 -= openedTilesNum[types.indexOf(ryanmenTiles[i].charAt(1))][ryanmenTiles[i].charAt(0) - 1];
         }
         span.appendChild(document.createElement('p'));
-        span.appendChild(getTermElement(7));
-        span.innerHTML += ': ' + ukeireMaisuu1;
-        span.appendChild(getTermElement(9));
-        span.appendChild(document.createElement('p'));
         span.appendChild(getTermElement(8));
-        span.innerHTML += ': ' + ukeireMaisuu2;
+        span.innerHTML += ': ' + ukeireMaisuu1;
+        span.appendChild(getTermElement(10));
+        span.appendChild(document.createElement('p'));
         span.appendChild(getTermElement(9));
+        span.innerHTML += ': ' + ukeireMaisuu2;
+        span.appendChild(getTermElement(10));
     } */
 
     if (!kanFlag) {
@@ -441,7 +464,7 @@ const printDora = () => {
     const tr = document.createElement('tr');
 
     let td = document.createElement('td');
-    td.appendChild(getTermElement(2));
+    td.appendChild(getTermElement(3));
     tr.appendChild(td);
 
     // 표시된 도라 표시패
@@ -466,6 +489,15 @@ const printDora = () => {
 }
 
 const checkKan = () => {
+    // 남은 패가 없거나 남은 쯔모가 없다면 계산하지 않고 테이블만 작성
+    if ((!leftTsumo && myWind === haitei) || !tiles.length) { 
+        const table = document.getElementById('hand');
+        const tr = document.createElement('tr');
+        tr.appendChild(document.createElement('td'));
+        table.appendChild(tr);
+        return;
+    }
+
     let kanCheckHand = [];
     
     // 아카도라를 제거함
@@ -493,7 +525,7 @@ const checkKan = () => {
         if (kanCheckHand[i] == kanCheckHand[i + 3]) {
             const div = document.createElement('div');
             div.classList.add('selectable');
-            div.appendChild(getTermElement(4));
+            div.appendChild(getTermElement(5));
 
             if (detectMobile()) {
                 div.addEventListener('click', function() { kanForMobile(i); });
@@ -510,6 +542,8 @@ const checkKan = () => {
             td[i].classList.add('kan');
             if (detectMobile()) {
                 td[i].addEventListener('click', function(e) {
+                    if (!optionShanten) { return; }
+
                     const td = document.getElementsByClassName('arrow-container');
                     for (let i = 0; i < td.length; i++) {
                         td[i].classList.remove('selected');
@@ -520,6 +554,8 @@ const checkKan = () => {
             }
             else {
                 td[i].addEventListener('mouseenter', function(e) {
+                    if (!optionShanten) { return; }
+
                     const td = document.getElementsByClassName('arrow-container');
                     for (let i = 0; i < td.length; i++) {
                         td[i].classList.remove('selected');
@@ -544,7 +580,7 @@ const checkKan = () => {
         if (kanCheckHand[i] == kanCheckHand[i + 2] && kanCheckHand[i] == kanCheckHand[kanCheckHand.length - 1]) {
             const div = document.createElement('div');
             div.classList.add('selectable');
-            div.appendChild(getTermElement(4));
+            div.appendChild(getTermElement(5));
 
             if (detectMobile()) {
                 div.addEventListener('click', function() { kanForMobile(i); });
@@ -561,6 +597,8 @@ const checkKan = () => {
             td[i].classList.add('kan');
             if (detectMobile()) {
                 div.addEventListener('click', function(e) {
+                    if (!optionShanten) { return; }
+
                     const td = document.getElementsByClassName('arrow-container');
                     for (let i = 0; i < td.length; i++) {
                         td[i].classList.remove('selected');
@@ -571,6 +609,8 @@ const checkKan = () => {
             }
             else {
                 div.addEventListener('mouseenter', function(e) {
+                    if (!optionShanten) { return; }
+
                     const td = document.getElementsByClassName('arrow-container');
                     for (let i = 0; i < td.length; i++) {
                         td[i].classList.remove('selected');
@@ -595,9 +635,33 @@ const checkKan = () => {
     table.appendChild(tr);
 }
 
-const callKan = (index) => {
-    if (!tiles.length) { return; }
+const calculateLeftTsumo = () => {
+    let _leftTsumo = 18;
 
+    switch (myWind) {
+        case "東":
+            _leftTsumo -= kan.length < 2 ? kawa.length : kawa.length + 1;
+            break;
+        case "南":
+            _leftTsumo -= kan.length < 1 ? kawa.length : kawa.length + 1;
+            break;
+        case "西":
+            _leftTsumo -= kan.length < 4 ? kawa.length + 1 : kawa.length + 2;
+            break;
+        case "北":
+            _leftTsumo -= kan.length < 3 ? kawa.length + 1: kawa.length + 2;
+            break;
+    }
+
+    haitei = winds[(5 - kan.length) % 4];
+
+    const leftTsumoTable = document.getElementById('left-tsumo');
+    const span = leftTsumoTable.getElementsByClassName('left-tsumo-num')[0];
+    span.innerHTML = _leftTsumo;
+    leftTsumo = _leftTsumo;
+}
+
+const callKan = (index) => {
     const tile = hand[index];
     // 깡을 선언한 네 개의 패를 제거함
     if (tile.charAt(0) == '0') {
@@ -623,11 +687,14 @@ const callKan = (index) => {
 
     calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
+    calculateLeftTsumo();
     printCurrentHand();
     printDora();
 }
 
 const newGame = () => {
+    const leftTsumoTable = document.getElementById('left-tsumo');
+    leftTsumoTable.innerHTML = '';
     const windTable = document.getElementById('wind');
     windTable.innerHTML = '';
     const kawaTable = document.getElementById('kawa');

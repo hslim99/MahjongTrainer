@@ -34,8 +34,16 @@ td img {
     vertical-align: middle;
 }
 
-#wind, #dora {
+#game-info table {
     display: inline-block;
+}
+
+#left-tsumo {
+    font-size: 12px;
+}
+
+.left-tsumo-num {
+    font-size: 32px;
 }
 
 #game-info {
