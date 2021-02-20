@@ -219,22 +219,13 @@ const printCurrentHand = () => {
 
     // 반복문 2: 깡 표시
     for (let i = 0; i < kan.length; i++) {
-        
+        const span = document.createElement('span');
+        span.setAttribute('style', 'width: 10px; display: inline-block');
+        tr.appendChild(span);
+
         let img = document.createElement('img');
         let td = document.createElement('td');
         img.setAttribute('src', 'img/back.png');
-        td.classList.add('tile-container');
-        td.appendChild(img);
-        tr.appendChild(td);
-
-        img = document.createElement('img');
-        td = document.createElement('td');
-        if (kan[i].charAt(0) == '5' && kan[i] != '5z') {
-            img.setAttribute('src', 'img/0' + kan[i].charAt(1) + '.png');
-        }
-        else {
-            img.setAttribute('src', 'img/' + kan[i] + '.png');
-        }
         td.classList.add('tile-container');
         td.appendChild(img);
         tr.appendChild(td);
@@ -242,6 +233,18 @@ const printCurrentHand = () => {
         img = document.createElement('img');
         td = document.createElement('td');
         img.setAttribute('src', 'img/' + kan[i] + '.png');
+        td.classList.add('tile-container');
+        td.appendChild(img);
+        tr.appendChild(td);
+
+        img = document.createElement('img');
+        td = document.createElement('td');
+        if (kan[i].charAt(0) == '0') {
+            img.setAttribute('src', 'img/5' + kan[i].charAt(1) + '.png');
+        }
+        else {
+            img.setAttribute('src', 'img/' + kan[i] + '.png');
+        }
         td.classList.add('tile-container');
         td.appendChild(img);
         tr.appendChild(td);
