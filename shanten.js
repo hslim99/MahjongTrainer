@@ -36,6 +36,13 @@ const calculateShanten = (newHand) => {
 
     // 머리가 있을 때: 머리를 뺌 -> 커쯔를 뺌 -> 슌쯔를 뺌 -> 타쯔 후보를 뺌
     for (let type = 0; type < 4; type++) {
+        if (optionMode === 'honitu') {
+            if (type != numType && type != 3) { continue; }
+        }
+        else if (optionMode === 'chinitu') {
+            if (type != numType) { continue; };
+        }
+        
         for (let num = 0; (type < 3 && num < 9) || (type == 3 && num < 7); num++) {
             for (let addend = 0; addend < 8; addend++) {
                 tilesNum = [[..._tilesNum[0]], [..._tilesNum[1]], [..._tilesNum[2]], [..._tilesNum[3]]];
@@ -82,6 +89,13 @@ const calculateShanten = (newHand) => {
 
     // 머리가 있을 때: 머리를 뺌 -> 슌쯔를 뺌 -> 커쯔를 뺌 -> 타쯔 후보를 뺌
     for (let type = 0; type < 4; type++) {
+        if (optionMode === 'honitu') {
+            if (type != numType && type != 3) { continue; }
+        }
+        else if (optionMode === 'chinitu') {
+            if (type != numType) { continue; };
+        }
+        
         for (let num = 0; (type < 3 && num < 9) || (type == 3 && num < 7); num++) {
             for (let addend = 0; addend < 8; addend++) {
                 tilesNum = [[..._tilesNum[0]], [..._tilesNum[1]], [..._tilesNum[2]], [..._tilesNum[3]]];
@@ -128,6 +142,13 @@ const calculateShanten = (newHand) => {
 
     // 머리가 없을 때: 커쯔를 뺌 -> 슌쯔를 뺌 -> 타쯔 후보를 뺌
     for (let type = 0; type < 4; type++) {
+        if (optionMode === 'honitu') {
+            if (type != numType && type != 3) { continue; }
+        }
+        else if (optionMode === 'chinitu') {
+            if (type != numType) { continue; };
+        }
+        
         for (let num = 0; (type < 3 && num < 9) || (type == 3 && num < 7); num++) {
             for (let addend = 0; addend < 8; addend++) {
                 tilesNum = [[..._tilesNum[0]], [..._tilesNum[1]], [..._tilesNum[2]], [..._tilesNum[3]]];
@@ -177,6 +198,13 @@ const calculateShanten = (newHand) => {
         taatsuNum = 0;
         let tileTypesNum = 0;
         for (let type = 0; type < 4; type++) {
+            if (optionMode === 'honitu') {
+                if (type != numType && type != 3) { continue; }
+            }
+            else if (optionMode === 'chinitu') {
+                if (type != numType) { continue; };
+            }
+            
             for (let num = 0; (type < 3 && num < 9) || (type == 3 && num < 7); num++) { 
                 if (tilesNum[type][num]) { tileTypesNum++; }
                 if (tilesNum[type][num] >= 2) { // (type, num)에 머리가 있다고 판단
@@ -194,32 +222,34 @@ const calculateShanten = (newHand) => {
         else {
             shanten = shanten < 6 - toitsuNum ? shanten : 6 - toitsuNum; // 최소 샹텐 수 갱신
         }
-         
-        // 국사무쌍의 경우
-        tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
-        toitsuNum = 0;
-        toitsuTile.splice(0, toitsuTile.length);
-        mentsuNum = kan.length;
-        taatsuNum = 0;
-        kokushiCount = 0;
-    
-        // 이하의 반복문에서 또이쯔를 찾으면 또이쯔의 카운트를 늘림
-        for (let type = 0; type < 4; type++) {
-            if (type < 3) { // 노두패를 셈
-                if (tilesNum[type][0] >= 1) { kokushiCount++; }
-                if (tilesNum[type][0] > 1) { toitsuNum++; }
-                if (tilesNum[type][8] >= 1) { kokushiCount++; }
-                if (tilesNum[type][8] > 1) { toitsuNum++; }
-            }
-            else { // 자패를 셈
-                for (let num = 0; num < 7; num++) {
-                    if (tilesNum[type][num] >= 1) { kokushiCount++; }
-                    if (tilesNum[type][num] > 1) { toitsuNum++; }
+
+        if (optionMode === 'normal') {
+            // 국사무쌍의 경우
+            tilesNum = [[..._tilesNumForSpecialHand[0]], [..._tilesNumForSpecialHand[1]], [..._tilesNumForSpecialHand[2]], [..._tilesNumForSpecialHand[3]]];
+            toitsuNum = 0;
+            toitsuTile.splice(0, toitsuTile.length);
+            mentsuNum = kan.length;
+            taatsuNum = 0;
+            kokushiCount = 0;
+        
+            // 이하의 반복문에서 또이쯔를 찾으면 또이쯔의 카운트를 늘림
+            for (let type = 0; type < 4; type++) {
+                if (type < 3) { // 노두패를 셈
+                    if (tilesNum[type][0] >= 1) { kokushiCount++; }
+                    if (tilesNum[type][0] > 1) { toitsuNum++; }
+                    if (tilesNum[type][8] >= 1) { kokushiCount++; }
+                    if (tilesNum[type][8] > 1) { toitsuNum++; }
+                }
+                else { // 자패를 셈
+                    for (let num = 0; num < 7; num++) {
+                        if (tilesNum[type][num] >= 1) { kokushiCount++; }
+                        if (tilesNum[type][num] > 1) { toitsuNum++; }
+                    }
                 }
             }
+            if (toitsuNum) { kokushiCount++; } // 또이쯔가 있었다면 국사 카운트를 늘림
+            shanten = shanten < 13 - kokushiCount ? shanten : 13 - kokushiCount; // 최소 샹텐 수 갱신
         }
-        if (toitsuNum) { kokushiCount++; } // 또이쯔가 있었다면 국사 카운트를 늘림
-        shanten = shanten < 13 - kokushiCount ? shanten : 13 - kokushiCount; // 최소 샹텐 수 갱신
     }
 
     return shanten;
@@ -240,6 +270,14 @@ const shantenFormula = () => {
 
 // 커쯔를 먼저 체크함
 const checkMentsuTaatsu1 = (type, addend) => {
+    // 일색 모드에서 색이 일치하지 않으면 그냥 반환함
+    if (optionMode === 'honitu') {
+        if (type != numType && type != 3) { return; }
+    }
+    else if (optionMode === 'chinitu') {
+        if (type != numType) { return; };
+    }
+
     // 커쯔 체크
     for (let i = 0; i < 9; i++) {
         if (tilesNum[type][i] >= 3) { 
@@ -303,6 +341,14 @@ const checkMentsuTaatsu1 = (type, addend) => {
 
 // 슌쯔를 먼저 체크함
 const checkMentsuTaatsu2 = (type, addend) => {
+    // 일색 모드에서 색이 일치하지 않으면 그냥 반환함
+    if (optionMode === 'honitu') {
+        if (type != numType && type != 3) { return; }
+    }
+    else if (optionMode === 'chinitu') {
+        if (type != numType) { return; };
+    }
+    
     // 슌쯔 체크 1
     for (let i = 0; i < 7; i++) {
         while (tilesNum[type][i + addend] * tilesNum[type][i + 1 + addend] * tilesNum[type][i + 2 + addend]) {

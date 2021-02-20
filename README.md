@@ -8,21 +8,46 @@
 
 이때, 자신의 손패에서 버리고 싶은 패를 골라 클릭하면 버릴 수 있습니다.
 
-클릭하지 않고 패에 마우스만 올려놓았을 경우에는 해당 패를 버렸을 경우의 샹텐 수<sup>[1](#footnote1)</sup>가 나타나게 됩니다.
+클릭하지 않고 패 혹은 깡 버튼에 마우스만 올려놓았을 경우에는 해당 패를 버리거나 깡을 선언한 경우의 샹텐 수<sup>[1](#footnote1)</sup>가 나타나게 됩니다.
 
 버림패가 18장에 달했을 경우 그대로 조패가 끝나며, 왕패 우측의 다시하기 버튼으로 새로이 시작할 수 있습니다.
 
-## Known issues
+## Update Log
+
+### 21-02-20
+혼일색, 청일색 모드가 추가됨
+
+## Known issues / to-do list
 
 * 남은 패의 수가 표시가 되지 않음
-* ~~5장째 패로 대기하도록 샹텐 수가 계산되는 버그~~ (해결됨)
+* 깡을 선언했을 때 버림패의 수가 달라져야 함
+
+|깡|동가|남가|서가|북가|
+|---|---|---|---|---|
+|0회|18|18|17|17|
+|1회|18|17|17|17|
+|2회|17|17|17|17|
+|3회|17|17|17|16|
+|4회|17|17|16|16|
+
+▲ 깡 선언 수에 따른 쯔모 횟수
+
+* 버리고 나면 패 정보를 표시하는 말풍선이 사라지도록(모바일에선 됨)
+
+## Resolved issues
+
+* ~~5장째 패로 대기하도록 샹텐 수가 계산되지 않고 이때 유효패가 제대로 계산되지 않는 버그~~ (해결됨)
   
-  ~~e.g., <img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"> 의 경우 실제로는 1샹텐이지만 0샹텐(텐파이)로 표기됨~~
+  ~~e.g., <img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"> 의 경우 실제로는 1샹텐이지만 텐파이로 표기됨~~
+  
+  ~~e.g., <img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/1z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/2z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/3z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"><img src="/img/4z.png" width="24px" height="32px"> 의 경우 타 <img src="/img/1z.png" width="24px" height="32px">과 타 <img src="/img/2z.png" width="24px" height="32px">이 1샹텐, 타 <img src="/img/3z.png" width="24px" height="32px">와 타 <img src="/img/4z.png" width="24px" height="32px">는 2샹텐이지만 각각 텐파이, 1샹텐으로 표기되며 유효패가 제대로 계산되지 않음~~
+
+  ~~e.g., <img src="/img/1m.png" width="24px" height="32px"><img src="/img/1m.png" width="24px" height="32px"><img src="/img/1m.png" width="24px" height="32px"><img src="/img/1m.png" width="24px" height="32px"><img src="/img/9m.png" width="24px" height="32px"><img src="/img/9m.png" width="24px" height="32px"><img src="/img/9m.png" width="24px" height="32px"><img src="/img/9m.png" width="24px" height="32px"><img src="/img/1p.png" width="24px" height="32px"><img src="/img/1p.png" width="24px" height="32px"><img src="/img/1p.png" width="24px" height="32px"><img src="/img/9p.png" width="24px" height="32px"><img src="/img/9p.png" width="24px" height="32px"><img src="/img/9p.png" width="24px" height="32px"> 의 경우 4가지의 타패 경우에 모두 유효패가 제대로 계산되지 않음~~
+
 * ~~깡을 쳤을 때 나머지 패로 치또이츠를 만들면 버그~~ (해결됨)
 * ~~깡을 선언하고 영상패를 쯔모한 손패에서 샹텐 수가 계산되지 않는 버그~~ (해결됨)
 * ~~똑같은 머리가 두 쌍인 치또이쯔가 계산되는 버그~~ (해결됨)
 * ~~국사무쌍의 샹텐 수가 제대로 계산되지 않는 버그~~ (해결됨)
-* 깡을 선언했을 때 버림패의 수가 달라야 함
 
 "[riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles)" by "[FluffyStuff](https://github.com/FluffyStuff)" is licensed by under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) / Modified from original
 

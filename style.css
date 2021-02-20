@@ -5,40 +5,51 @@ html, body, head {
     margin: 0px 0px;
     padding: 0px 0px;
 }
+
 body {
     font-size: 16px;
     font-weight: bold;
 }
-.language {
+
+.top-bar {
     text-align: right;
     margin: 5px;
 }
-.language span {
+
+.top-bar span {
     pointer-events: auto;
     cursor: pointer;
 }
+
 .wind {
     font-size: 32px;
 }
+
 table {
     margin: auto;
     border-spacing: 0px;
 }
+
 td img {
     vertical-align: middle;
 }
+
 #wind, #dora {
     display: inline-block;
 }
+
 #game-info {
     text-align: center;
 }
+
 #restart {
     cursor: pointer;
 }
+
 h1 {
     text-align: center;
 }
+
 td {
     text-align: center;
     vertical-align: middle;
@@ -47,6 +58,7 @@ td {
     width: 60px;
     height: 80px;
 }
+
 div.selectable {
     width: 60px;
     height: 80px;
@@ -55,12 +67,15 @@ div.selectable {
     border-radius: 10px;
     background-color: pink;
 }
+
 .selectable:hover {
     filter: brightness(0.85);
 }
+
 .arrow-container {
     position: relative;
 }
+
 .arrow-container .arrow-box {
     display: none;
     position: absolute;
@@ -73,6 +88,7 @@ div.selectable {
     margin-top: 10px;
     margin-left: -90px;
 }
+
 .arrow-box:after {
     position: absolute;
     bottom: 100%;
@@ -86,7 +102,62 @@ div.selectable {
     border-width: 10px;
     content: " ";
 }
-.arrow-container:hover .arrow-box, .selected .arrow-box {
+
+.selected .arrow-box {
     display: block;
     z-index: 1;
+}
+
+.option-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.option-container.show {
+    display: block;
+}
+
+.option-dialog {
+    width: 580px;
+    margin: 40px auto;
+    background-color: white;
+}
+
+.option-content {
+    margin: 0px auto auto 0px;
+    border-spacing: 5px;
+    padding: 10px 15px;
+    text-align: center;
+}
+
+.option-content td {
+    width: 100px;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+td.option-name {
+    width: 120px;
+    font-weight: bold;
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+td.option-selected {
+    border: 3px solid red;
+    border-radius: 10px;
+}
+
+#opt-num-row:not(.show) {
+    display: none;
+}
+
+#opt-num-row {
+    display: table-row;
 }

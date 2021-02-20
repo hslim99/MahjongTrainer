@@ -1,16 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mahjong Trainer</title>
+    <title>Mahjong Trainer β</title>
     <link rel="stylesheet" href="style.css">
     <script type='text/javascript' src='lang.js'></script>
     <script type='text/javascript' src='source.js'></script>
     <script type='text/javascript' src='shanten.js'></script>
+    <script type='text/javascript' src='option.js'></script>
 </head>
 <body>
-    <div class="language">
-        <span onclick="switchLanguage('kr');">한국어</span>
-        <span onclick="switchLanguage('jp');">日本語</span>
+    <div class="top-bar">
+        <span id="settings">Settings</span>
+    </div>
+    <div class="option-container">
+            <div class="option-dialog">
+                <table class="option-content">
+                    <tr>
+                        <td class="option-name" id="opt-lang"></td>
+                        <td id="opt-lang-kr">한국어</td>
+                        <td id="opt-lang-jp">日本語</td>
+                    </tr>
+                    <tr>
+                        <td class="option-name" id="opt-mode"></td>
+                        <td id="opt-mode-normal"></td>
+                        <td id="opt-mode-honitu"></td>
+                        <td id="opt-mode-chinitu"></td>
+                    </tr>
+                    <tr id="opt-num-row">
+                        <td class="option-name" id="opt-num"></td>
+                        <td id="opt-num-random"></td>
+                        <td id="opt-num-man"></td>
+                        <td id="opt-num-pin"></td>
+                        <td id="opt-num-sou"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
     <div id="game-info">
         <table id="wind"></table>
