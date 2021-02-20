@@ -439,7 +439,7 @@ const calculateTilesForNextShanten = (newHand, nextShanten) => {
     for (let type = 0; type < 4; type++) {
         for (let num = 0; (type < 3 && num < 9) || (type == 3 && num < 7); num++) {
             //if (openedTilesNum[type][num] >= 4) { continue; } // 이미 4장을 뽑은 패는 유효패를 계산하지 않음
-            if (handTilesNum[type][num] >= 4) { continue; } // 두 가지의 유효패 계산식이 있어서 위 한 줄 대신 이것으로 대체
+            if (handTilesNum[type][num] >= 4 || kan.indexOf((num + 1) + types[type]) >= 0) { continue; } // 두 가지의 유효패 계산식이 있어서 위 한 줄 대신 이것으로 대체
 
             newHand.push((num + 1) + types[type]);
             if (calculateShanten(newHand) == nextShanten) { // 유효패일 때

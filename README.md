@@ -58,6 +58,7 @@
 * ~~국사무쌍의 샹텐 수가 제대로 계산되지 않는 버그~~ (해결됨)
 * ~~남은 패의 수가 표시가 되지 않음~~ (해결됨)
 * ~~깡을 선언했을 때 버림패의 수가 달라져야 함~~ (해결됨)
+* ~~깡을 선언한 패가 유효패 계산에 포함되는 버그~~ (해결됨)
 
 "[riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles)" by "[FluffyStuff](https://github.com/FluffyStuff)" is licensed by under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) / Modified from original
 
