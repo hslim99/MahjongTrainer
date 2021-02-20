@@ -266,7 +266,7 @@ const printCurrentHand = () => {
 
 // 패를 버리면서 버림패를 출력하는 함수
 const discardTile = (index) => {
-    if (kawa.length >= 18) { return; }
+    if (kawa.length >= 18 || !tiles.length) { return; }
 
     const table = document.getElementById('kawa');
     const td = table.getElementsByTagName('td');
@@ -596,6 +596,8 @@ const checkKan = () => {
 }
 
 const callKan = (index) => {
+    if (!tiles.length) { return; }
+
     const tile = hand[index];
     // 깡을 선언한 네 개의 패를 제거함
     if (tile.charAt(0) == '0') {
