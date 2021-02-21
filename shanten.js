@@ -36,7 +36,10 @@ const calculateShanten = (newHand) => {
 
     // 머리가 있을 때: 머리를 뺌 -> 커쯔를 뺌 -> 슌쯔를 뺌 -> 타쯔 후보를 뺌
     for (let type = 0; type < 4; type++) {
-        if (optionMode === 'honitu') {
+        if (optionMode === 'numonly') {
+            if (type == 3) { continue; }
+        }
+        else if (optionMode === 'honitu') {
             if (type != numType && type != 3) { continue; }
         }
         else if (optionMode === 'chinitu') {
@@ -89,7 +92,10 @@ const calculateShanten = (newHand) => {
 
     // 머리가 있을 때: 머리를 뺌 -> 슌쯔를 뺌 -> 커쯔를 뺌 -> 타쯔 후보를 뺌
     for (let type = 0; type < 4; type++) {
-        if (optionMode === 'honitu') {
+        if (optionMode === 'numonly') {
+            if (type == 3) { continue; }
+        }
+        else if (optionMode === 'honitu') {
             if (type != numType && type != 3) { continue; }
         }
         else if (optionMode === 'chinitu') {
@@ -142,7 +148,10 @@ const calculateShanten = (newHand) => {
 
     // 머리가 없을 때: 커쯔를 뺌 -> 슌쯔를 뺌 -> 타쯔 후보를 뺌
     for (let type = 0; type < 4; type++) {
-        if (optionMode === 'honitu') {
+        if (optionMode === 'numonly') {
+            if (type == 3) { continue; }
+        }
+        else if (optionMode === 'honitu') {
             if (type != numType && type != 3) { continue; }
         }
         else if (optionMode === 'chinitu') {
@@ -198,7 +207,10 @@ const calculateShanten = (newHand) => {
         taatsuNum = 0;
         let tileTypesNum = 0;
         for (let type = 0; type < 4; type++) {
-            if (optionMode === 'honitu') {
+            if (optionMode === 'numonly') {
+                if (type == 3) { continue; }
+            }
+            else if (optionMode === 'honitu') {
                 if (type != numType && type != 3) { continue; }
             }
             else if (optionMode === 'chinitu') {
@@ -412,6 +424,8 @@ const checkMentsuTaatsu2 = (type, addend) => {
 
 // 자패에 대해 체크하는 경우
 const checkCharactersMentsuTaatsu = () => {
+    if (optionMode === 'numonly' || optionMode === 'chinitu') { return; }
+
     // 커쯔 체크
     // 마작은 한 종류의 패가 4장밖에 없으므로
     // 한 종류의 패에서 커쯔와 또이쯔가 동시에 나올 수 없음

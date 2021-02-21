@@ -36,7 +36,10 @@ const initialize = () => {
     numType = optionNum === 'random' ? Math.floor(Math.random() * 3) : optionNum === 'man' ? 0 : optionNum === 'pin' ? 1 : 2;
 
     for (let type = 0; type < 4; type++) {
-        if (optionMode === 'honitu') {
+        if (optionMode === 'numonly') {
+            if (type == 3) { continue; }
+        }
+        else if (optionMode === 'honitu') {
             if (type != numType && type != 3) { continue; }
         }
         else if (optionMode === 'chinitu') {

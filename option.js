@@ -40,13 +40,14 @@ const optionInitialize = () => {
     document.getElementById('opt-shanten-off').appendChild(getOptionTermElement(3));
     document.getElementById('opt-mode').appendChild(getOptionTermElement(4));
     document.getElementById('opt-mode-normal').appendChild(getOptionTermElement(5));
-    document.getElementById('opt-mode-honitu').appendChild(getOptionTermElement(6));
-    document.getElementById('opt-mode-chinitu').appendChild(getOptionTermElement(7));
-    document.getElementById('opt-num').appendChild(getOptionTermElement(8));
-    document.getElementById('opt-num-random').appendChild(getOptionTermElement(9));
-    document.getElementById('opt-num-man').appendChild(getOptionTermElement(10));
-    document.getElementById('opt-num-pin').appendChild(getOptionTermElement(11));
-    document.getElementById('opt-num-sou').appendChild(getOptionTermElement(12));
+    document.getElementById('opt-mode-numonly').appendChild(getOptionTermElement(6));
+    document.getElementById('opt-mode-honitu').appendChild(getOptionTermElement(7));
+    document.getElementById('opt-mode-chinitu').appendChild(getOptionTermElement(8));
+    document.getElementById('opt-num').appendChild(getOptionTermElement(9));
+    document.getElementById('opt-num-random').appendChild(getOptionTermElement(10));
+    document.getElementById('opt-num-man').appendChild(getOptionTermElement(11));
+    document.getElementById('opt-num-pin').appendChild(getOptionTermElement(12));
+    document.getElementById('opt-num-sou').appendChild(getOptionTermElement(13));
     
     // 이벤트 리스너 추가
     document.getElementById('opt-lang-kr').addEventListener('click', function() { switchLanguage('kr'); });
@@ -54,6 +55,7 @@ const optionInitialize = () => {
     document.getElementById('opt-shanten-on').addEventListener('click', function() { optionShanten = true; });
     document.getElementById('opt-shanten-off').addEventListener('click', function() { optionShanten = false; });
     document.getElementById('opt-mode-normal').addEventListener('click', function() { switchMode('normal'); });
+    document.getElementById('opt-mode-numonly').addEventListener('click', function() { switchMode('numonly'); });
     document.getElementById('opt-mode-honitu').addEventListener('click', function() { switchMode('honitu'); });
     document.getElementById('opt-mode-chinitu').addEventListener('click', function() { switchMode('chinitu'); });
     document.getElementById('opt-num-random').addEventListener('click', function() { switchNum('random'); });
@@ -64,7 +66,7 @@ const optionInitialize = () => {
 
 const switchMode = (mode) => {
     optionMode = mode;
-    if (mode == 'normal') {
+    if (mode === 'normal' || mode === 'numonly') {
         document.getElementById('opt-num-row').classList.remove('show');
     }
     else {

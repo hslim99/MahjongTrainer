@@ -132,7 +132,7 @@ div.selectable {
 }
 
 .option-dialog {
-    width: 580px;
+    width: max-content;
     margin: 40px auto;
     background-color: white;
 }
