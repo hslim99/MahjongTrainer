@@ -188,7 +188,10 @@ const printCurrentHand = () => {
         img.setAttribute('src', 'img/' + hand[i] + '.png');
         img.classList.add('selectable');
         if (detectMobile()) {
-            img.addEventListener('click', function() { discardForMobile(i); });
+            img.addEventListener('click', function(e) {
+                discardForMobile(i);
+                e.stopPropagation();
+            });
         }
         else {
             img.addEventListener('click', function() { discardTile(i); });
@@ -414,8 +417,10 @@ const showNextHandInfo = (index, kanFlag) => {
 
 const discardForMobile = (index) => {
     if (selected != index) {
-        showNextHandInfo(index, false);
+        console.log(selected + ' ' + index);
         selected = index;
+        console.log(selected + ' ' + index);
+        showNextHandInfo(index, false);
     }
     else {
         discardTile(index);
@@ -531,7 +536,10 @@ const checkKan = () => {
             div.appendChild(getTermElement(5));
 
             if (detectMobile()) {
-                div.addEventListener('click', function() { kanForMobile(i); });
+                div.addEventListener('click', function(e) {
+                    kanForMobile(i);
+                    e.stopPropagation();
+                });
             }
             else {
                 div.addEventListener('click', function() { callKan(i); });
@@ -586,7 +594,10 @@ const checkKan = () => {
             div.appendChild(getTermElement(5));
 
             if (detectMobile()) {
-                div.addEventListener('click', function() { kanForMobile(i); });
+                div.addEventListener('click', function(e) {
+                    kanForMobile(i);
+                    e.stopPropagation();
+                });
             }
             else {
                 div.addEventListener('click', function() { callKan(i); });

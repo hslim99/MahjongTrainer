@@ -10,9 +10,12 @@
 
 클릭하지 않고 패 혹은 깡 버튼에 마우스만 올려놓았을 경우에는 해당 패를 버리거나 깡을 선언한 경우의 샹텐 수<sup>[1](#footnote1)</sup>가 나타나게 됩니다.
 
-버림패가 18장에 달했을 경우 그대로 조패가 끝나며, 왕패 우측의 다시하기 버튼으로 새로이 시작할 수 있습니다.
+남은 쯔모 수가 0이 되었을 경우 그대로 조패가 끝나며, 왕패 우측의 다시하기 버튼으로 새로이 시작할 수 있습니다.
 
 ## Update Log
+
+### 21-02-23
+* 모바일 기기에서 샹텐 수를 표시하지 않을 때 타패가 되지 않는 버그를 수정
 
 ### 21-02-21
 * 타패 후 손패의 정보를 보여주는 기능을 끄고 켤 수 있게 됨
@@ -60,6 +63,7 @@
 * ~~남은 패의 수가 표시가 되지 않음~~ (해결됨)
 * ~~깡을 선언했을 때 버림패의 수가 달라져야 함~~ (해결됨)
 * ~~깡을 선언한 패가 유효패 계산에 포함되는 버그~~ (해결됨)
+* ~~모바일 기기에서 샹텐 수를 표시하지 않을 때 타패가 되지 않는 버그를 수정~~
 
 "[riichi-mahjong-tiles](https://github.com/FluffyStuff/riichi-mahjong-tiles)" by "[FluffyStuff](https://github.com/FluffyStuff)" is licensed by under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) / Modified from original
 
