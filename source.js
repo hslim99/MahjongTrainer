@@ -192,7 +192,7 @@ const printCurrentHand = () => {
                 discardForMobile(i);
                 removeAllHover();
                 this.classList.add('hover');
-                e.stopPropagation();
+                //e.stopPropagation();
             });
         }
         else {
@@ -453,7 +453,7 @@ const kanForMobile = (index) => {
 
 const removeAllHover = () => {
     const selectable = document.getElementsByClassName('selectable');
-    for (let i = 0; i < selected.length; i++) {
+    for (let i = 0; i < selectable.length; i++) {
         selectable[i].classList.remove('hover');
     }
 }
@@ -559,7 +559,7 @@ const checkKan = () => {
                     kanForMobile(i);
                     removeAllHover();
                     this.classList.add('hover');
-                    e.stopPropagation();
+                    //e.stopPropagation();
                 });
             }
             else {
@@ -625,7 +625,7 @@ const checkKan = () => {
                     kanForMobile(i);
                     removeAllHover();
                     this.classList.add('hover');
-                    e.stopPropagation();
+                    //e.stopPropagation();
                 });
             }
             else {
