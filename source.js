@@ -190,12 +190,20 @@ const printCurrentHand = () => {
         if (detectMobile()) {
             img.addEventListener('click', function(e) {
                 discardForMobile(i);
+                removeAllHover();
+                this.classList.add('hover');
                 e.stopPropagation();
             });
         }
         else {
             img.addEventListener('click', function() { discardTile(i); });
-            img.addEventListener('mouseenter', function() { showNextHandInfo(i, false); });
+            img.addEventListener('mouseenter', function() { 
+                this.classList.add('hover');
+                showNextHandInfo(i, false);
+            });
+            img.addEventListener('mouseleave', function() { 
+                this.classList.remove('hover');
+            });
         }
 
         const span = document.createElement('span');
@@ -417,14 +425,17 @@ const showNextHandInfo = (index, kanFlag) => {
 
 const discardForMobile = (index) => {
     if (selected != index) {
-        console.log(selected + ' ' + index);
         selected = index;
-        console.log(selected + ' ' + index);
         showNextHandInfo(index, false);
     }
     else {
         discardTile(index);
         selected = -1;
+        
+        const selectable = document.getElementsByClassName('selectable');
+        for (let i = 0; i < selected.length; i++) {
+            selectable[i].classList.remove('hover');
+        }
     }
 }
 
@@ -436,6 +447,14 @@ const kanForMobile = (index) => {
     else {
         callKan(index);
         selected = -1;
+        removeAllHover();
+    }
+}
+
+const removeAllHover = () => {
+    const selectable = document.getElementsByClassName('selectable');
+    for (let i = 0; i < selected.length; i++) {
+        selectable[i].classList.remove('hover');
     }
 }
 
@@ -538,12 +557,20 @@ const checkKan = () => {
             if (detectMobile()) {
                 div.addEventListener('click', function(e) {
                     kanForMobile(i);
+                    removeAllHover();
+                    this.classList.add('hover');
                     e.stopPropagation();
                 });
             }
             else {
                 div.addEventListener('click', function() { callKan(i); });
-                div.addEventListener('mouseenter', function() { showNextHandInfo(i, true); });
+                div.addEventListener('mouseenter', function() {
+                    showNextHandInfo(i, true);
+                    this.classList.add('hover');
+                });
+                div.addEventListener('mouseleave', function() {
+                    this.classList.remove('hover');
+                })
             }
 
             const span = document.createElement('span');
@@ -596,12 +623,20 @@ const checkKan = () => {
             if (detectMobile()) {
                 div.addEventListener('click', function(e) {
                     kanForMobile(i);
+                    removeAllHover();
+                    this.classList.add('hover');
                     e.stopPropagation();
                 });
             }
             else {
                 div.addEventListener('click', function() { callKan(i); });
-                div.addEventListener('mouseenter', function() { showNextHandInfo(i, true); });
+                div.addEventListener('mouseenter', function() {
+                    showNextHandInfo(i, true);
+                    this.classList.add('hover');
+                });
+                div.addEventListener('mouseleave', function() {
+                    this.classList.remove('hover');
+                })
             }
 
             const span = document.createElement('span');

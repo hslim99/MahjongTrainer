@@ -76,7 +76,7 @@ div.selectable {
     background-color: pink;
 }
 
-.selectable:hover {
+.hover {
     filter: brightness(0.85);
 }
 
