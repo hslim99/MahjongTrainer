@@ -1,0 +1,157 @@
+html, body, head {
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    margin: 0px 0px;
+    padding: 0px 0px;
+}
+
+body {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.top-bar {
+    text-align: right;
+    margin: 5px;
+}
+
+.top-bar span {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.wind {
+    font-size: 32px;
+}
+
+table {
+    margin: auto;
+    border-spacing: 0px;
+}
+
+td img {
+    vertical-align: middle;
+}
+
+#game-info table {
+    display: inline-block;
+}
+
+#left-tsumo {
+    font-size: 12px;
+}
+
+.left-tsumo-num {
+    font-size: 32px;
+}
+
+#game-info {
+    text-align: center;
+}
+
+#restart {
+    cursor: pointer;
+}
+
+h1 {
+    text-align: center;
+}
+
+td {
+    text-align: center;
+    vertical-align: middle;
+    margin: 0px 0px;
+    padding: 0px 0px;
+    width: 60px;
+    height: 80px;
+}
+
+div.selectable {
+    width: 60px;
+    height: 80px;
+    vertical-align: middle;
+    display: table-cell;
+    border-radius: 10px;
+    background-color: pink;
+}
+
+.hover {
+    filter: brightness(0.85);
+}
+
+#hand-info-frame {
+    margin: auto;
+    height: 660px;
+}
+
+#hand-info-container {
+    display: none;
+    margin: auto;
+    position: relative;
+    width: 440px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #333;
+    color: #fff;
+    text-align: left;
+    font-size: 32px;
+}
+
+#hand-info-container.show-info {
+    display: block;
+}
+
+.option-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.option-container.show {
+    display: block;
+}
+
+.option-dialog {
+    width: max-content;
+    margin: 40px auto;
+    background-color: white;
+}
+
+.option-content {
+    margin: 0px auto auto 0px;
+    border-spacing: 5px;
+    padding: 10px 15px;
+    text-align: center;
+}
+
+.option-content td {
+    width: 100px;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+td.option-name {
+    width: 120px;
+    font-weight: bold;
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+td.option-selected {
+    border: 3px solid red;
+    border-radius: 10px;
+}
+
+#opt-num-row:not(.show) {
+    display: none;
+}
+
+#opt-num-row {
+    display: table-row;
+}

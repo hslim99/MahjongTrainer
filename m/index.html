@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mahjong Trainer β</title>
+    <link rel="stylesheet" href="src/style.css">
+    <script type='text/javascript' src='../src/lang.js'></script>
+    <script type='text/javascript' src='src/source.js'></script>
+    <script type='text/javascript' src='../src/shanten.js'></script>
+    <script type='text/javascript' src='../src/option.js'></script>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="../index.html?mobile">PC Version</a>
+        <span id="settings">Settings</span>
+    </div>
+    <div class="option-container">
+            <div class="option-dialog">
+                <table class="option-content">
+                    <tr>
+                        <td class="option-name" id="opt-lang"></td>
+                        <td id="opt-lang-kr">한국어</td>
+                        <td id="opt-lang-jp">日本語</td>
+                    </tr>
+                    <tr>
+                        <td class="option-name" id="opt-shanten"></td>
+                        <td id="opt-shanten-on"></td>
+                        <td id="opt-shanten-off"></td>
+                    </tr>
+                    <tr>
+                        <td class="option-name" id="opt-mode"></td>
+                        <td id="opt-mode-normal"></td>
+                        <td id="opt-mode-numonly"></td>
+                        <td id="opt-mode-honitu"></td>
+                        <td id="opt-mode-chinitu"></td>
+                    </tr>
+                    <tr id="opt-num-row">
+                        <td class="option-name" id="opt-num"></td>
+                        <td id="opt-num-random"></td>
+                        <td id="opt-num-man"></td>
+                        <td id="opt-num-pin"></td>
+                        <td id="opt-num-sou"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="game-info">
+        <table id="left-tsumo"></table>
+        <table id="wind"></table>
+        <table id="dora" ondragstart="return false"></table>
+        <span id="restart" ondragstart="return false">
+            <img src="../img/restart.png" onclick="newGame();"></img>
+        </span>
+    </div>
+    <table id="kawa" ondragstart="return false"></table>
+    <div id="hand-info-frame">
+        <div id="hand-info-container">
+            <span></span>
+        </div>
+    </div>
+    <table id="hand" ondragstart="return false"></table>
+</body>
+</html>

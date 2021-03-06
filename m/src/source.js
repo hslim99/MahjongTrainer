@@ -7,29 +7,12 @@ const types = ['m', 'p', 's', 'z'];
 const winds = ['東', '南', '西', '北'];
 let openedTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
 let handTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
-let calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+//let calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+let selected = -1; // for mobile devices
 let numType = -1;
 let myWind = '東';
 let haitei = '南';
 let leftTsumo = 18;
-
-const detectMobile = () => {
-    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    if (/windows phone/i.test(userAgent)) {
-        return true;
-    }
-
-    if (/android/i.test(userAgent)) {
-        return true;
-    }
-
-    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream)
-    {
-        return true;
-    } 
-    
-    return false;
-}
 
 const initialize = () => {
     numType = optionNum === 'random' ? Math.floor(Math.random() * 3) : optionNum === 'man' ? 0 : optionNum === 'pin' ? 1 : 2;
@@ -184,15 +167,13 @@ const printCurrentHand = () => {
         }
 
         const img = document.createElement('img');
-        img.setAttribute('src', 'img/' + hand[i] + '.png');
+        img.setAttribute('src', '../img/' + hand[i] + '.png');
         img.classList.add('selectable');
-        img.addEventListener('click', function() { discardTile(i); });
-        img.addEventListener('mouseenter', function() { 
+        img.addEventListener('touchstart', function(e) {
+            discardForMobile(i);
+            removeAllHover();
             this.classList.add('hover');
-            showNextHandInfo(i, false);
-        });
-        img.addEventListener('mouseleave', function() { 
-            this.classList.remove('hover');
+            //e.stopPropagation();
         });
 
         const span = document.createElement('span');
@@ -200,7 +181,7 @@ const printCurrentHand = () => {
 
         td.classList.add('arrow-container');
         td.classList.add('tile');
-        td.addEventListener('mouseenter', function(e) {
+        td.addEventListener('touchstart', function(e) {
             if (!optionShanten) { return; }
 
             const td = document.getElementsByClassName('arrow-container');
@@ -209,9 +190,6 @@ const printCurrentHand = () => {
             }
             this.classList.add('selected');
             e.stopPropagation();
-        });
-        td.addEventListener('mouseleave', function() {
-            this.classList.remove('selected');
         });
         td.appendChild(img);
         td.appendChild(span);
@@ -233,14 +211,14 @@ const printCurrentHand = () => {
 
         let img = document.createElement('img');
         let td = document.createElement('td');
-        img.setAttribute('src', 'img/back.png');
+        img.setAttribute('src', '../img/back.png');
         td.classList.add('tile-container');
         td.appendChild(img);
         tr.appendChild(td);
         
         img = document.createElement('img');
         td = document.createElement('td');
-        img.setAttribute('src', 'img/' + kan[i] + '.png');
+        img.setAttribute('src', '../img/' + kan[i] + '.png');
         td.classList.add('tile-container');
         td.appendChild(img);
         tr.appendChild(td);
@@ -248,10 +226,10 @@ const printCurrentHand = () => {
         img = document.createElement('img');
         td = document.createElement('td');
         if (kan[i].charAt(0) == '0') {
-            img.setAttribute('src', 'img/5' + kan[i].charAt(1) + '.png');
+            img.setAttribute('src', '../img/5' + kan[i].charAt(1) + '.png');
         }
         else {
-            img.setAttribute('src', 'img/' + kan[i] + '.png');
+            img.setAttribute('src', '../img/' + kan[i] + '.png');
         }
         td.classList.add('tile-container');
         td.appendChild(img);
@@ -259,7 +237,7 @@ const printCurrentHand = () => {
         
         img = document.createElement('img');
         td = document.createElement('td');
-        img.setAttribute('src', 'img/back.png');
+        img.setAttribute('src', '../img/back.png');
         td.classList.add('tile-container');
         td.appendChild(img);
         tr.appendChild(td);
@@ -283,7 +261,7 @@ const discardTile = (index) => {
 
     calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
-    img.setAttribute('src', 'img/' + hand[index] + '.png');
+    img.setAttribute('src', '../img/' + hand[index] + '.png');
     kawa.push(hand[index]);
     td[kawa.length - 1].appendChild(img);
     
@@ -302,12 +280,12 @@ const showNextHandInfo = (index, kanFlag) => {
     const newHand = [...hand];
 
     if (!kanFlag) {
-        if (calculatedTile[index] == 1 || calculatedTile[index] == 3) { return; }
+        //if (calculatedTile[index] == 1 || calculatedTile[index] == 3) { return; }
 
         newHand.splice(index, 1);
     }
     else {
-        if (calculatedTile[index] == 2 || calculatedTile[index] == 3) { return; }
+        //if (calculatedTile[index] == 2 || calculatedTile[index] == 3) { return; }
         const tile = newHand[index];
 
         // 깡을 선언한 네 개의 패를 제거함
@@ -332,10 +310,10 @@ const showNextHandInfo = (index, kanFlag) => {
     /* const ryanmenTiles = calculateTilesForNextShanten(newHand, shanten - 1).ryanmenTiles; */
 
     // 기본 유효패
-    const table = document.getElementById('hand');
+    /* const table = document.getElementById('hand');
     const tr = table.getElementsByTagName('tr')[!kanFlag ? 0 : 1];
-    const td = tr.getElementsByTagName('td')[index < hand.length - 1 ? index : index + 1];
-    const span = td.lastChild;
+    const td = tr.getElementsByTagName('td')[index < hand.length - 1 ? index : index + 1]; */
+    const span = document.getElementById('hand-info-container').getElementsByTagName('span')[0];
     let ukeireMaisuu1 = validTiles.length * 4; // 손패만을 고려했을 때의 유효패 개수
     let ukeireMaisuu2 = validTiles.length * 4; // 도라 표시패와 강까지 고려했을 때의 유효패 개수
     span.innerHTML = '';
@@ -349,9 +327,9 @@ const showNextHandInfo = (index, kanFlag) => {
     span.appendChild(document.createElement('p'));
     for (let i = 0; i < validTiles.length; i++) {
         const img = document.createElement('img');
-        img.setAttribute('src', 'img/' + validTiles[i] + '.png');
-        img.setAttribute('height', '40px');
-        img.setAttribute('width', '30px');
+        img.setAttribute('src', '../img/' + validTiles[i] + '.png');
+        img.setAttribute('height', '80px');
+        img.setAttribute('width', '60px');
         span.appendChild(img);
         ukeireMaisuu1 -= handTilesNum[types.indexOf(validTiles[i].charAt(1))][validTiles[i].charAt(0) - 1];
         ukeireMaisuu2 -= openedTilesNum[types.indexOf(validTiles[i].charAt(1))][validTiles[i].charAt(0) - 1];
@@ -372,7 +350,7 @@ const showNextHandInfo = (index, kanFlag) => {
         span.appendChild(document.createElement('p'));
         for (let i = 0; i < ryanmenTiles.length; i++) {
             const img = document.createElement('img');
-            img.setAttribute('src', 'img/' + ryanmenTiles[i] + '.png');
+            img.setAttribute('src', '../img/' + ryanmenTiles[i] + '.png');
             img.setAttribute('height', '40px');
             img.setAttribute('width', '30px');
             span.appendChild(img);
@@ -396,6 +374,8 @@ const showNextHandInfo = (index, kanFlag) => {
         calculatedTile[index] += 2;
         kan.pop();
     }
+
+    document.getElementById('hand-info-container').classList.add('show-info');
 }
 
 const discardForMobile = (index) => {
@@ -406,11 +386,7 @@ const discardForMobile = (index) => {
     else {
         discardTile(index);
         selected = -1;
-        
-        const selectable = document.getElementsByClassName('selectable');
-        for (let i = 0; i < selected.length; i++) {
-            selectable[i].classList.remove('hover');
-        }
+        document.getElementById('hand-info-container').classList.remove('show-info');
     }
 }
 
@@ -422,7 +398,6 @@ const kanForMobile = (index) => {
     else {
         callKan(index);
         selected = -1;
-        removeAllHover();
     }
 }
 
@@ -473,7 +448,7 @@ const printDora = () => {
     for (let i = 0; i < dora.length; i++) {
         const img = document.createElement('img');
         const td = document.createElement('td');
-        img.setAttribute('src', 'img/' + dora[i] + '.png');
+        img.setAttribute('src', '../img/' + dora[i] + '.png');
         td.classList.add('tile.container');
         td.appendChild(img);
         tr.appendChild(td);
@@ -483,7 +458,7 @@ const printDora = () => {
     for (let i = dora.length; i < 5; i++) {
         const img = document.createElement('img');
         const td = document.createElement('td');
-        img.setAttribute('src', 'img/back.png');
+        img.setAttribute('src', '../img/back.png');
         td.appendChild(img);
         tr.appendChild(td);
     }
@@ -529,21 +504,19 @@ const checkKan = () => {
             div.classList.add('selectable');
             div.appendChild(getTermElement(5));
 
-            div.addEventListener('click', function() { callKan(i); });
-            div.addEventListener('mouseenter', function() {
-                showNextHandInfo(i, true);
+            div.addEventListener('touchstart', function(e) {
+                kanForMobile(i);
+                removeAllHover();
                 this.classList.add('hover');
+                //e.stopPropagation();
             });
-            div.addEventListener('mouseleave', function() {
-                this.classList.remove('hover');
-            })
 
             const span = document.createElement('span');
             span.classList.add('arrow-box');
 
             td[i].classList.add('arrow-container');
             td[i].classList.add('kan');
-            td[i].addEventListener('mouseenter', function(e) {
+            td[i].addEventListener('touchstart', function(e) {
                 if (!optionShanten) { return; }
 
                 const td = document.getElementsByClassName('arrow-container');
@@ -552,9 +525,6 @@ const checkKan = () => {
                 }
                 this.classList.add('selected');
                 e.stopPropagation();
-            });
-            div.addEventListener('mouseleave', function() {
-                this.classList.remove('selected');
             });
 
             td[i].appendChild(div);
@@ -571,21 +541,19 @@ const checkKan = () => {
             div.classList.add('selectable');
             div.appendChild(getTermElement(5));
 
-            div.addEventListener('click', function() { callKan(i); });
-            div.addEventListener('mouseenter', function() {
-                showNextHandInfo(i, true);
+            div.addEventListener('touchstart', function(e) {
+                kanForMobile(i);
+                removeAllHover();
                 this.classList.add('hover');
+                //e.stopPropagation();
             });
-            div.addEventListener('mouseleave', function() {
-                this.classList.remove('hover');
-            })
 
             const span = document.createElement('span');
             span.classList.add('arrow-box');
 
             td[i].classList.add('arrow-container');
             td[i].classList.add('kan');
-            div.addEventListener('mouseenter', function(e) {
+            div.addEventListener('touchstart', function(e) {
                 if (!optionShanten) { return; }
 
                 const td = document.getElementsByClassName('arrow-container');
@@ -594,9 +562,6 @@ const checkKan = () => {
                 }
                 this.classList.add('selected');
                 e.stopPropagation();
-            });
-            div.addEventListener('mouseleave', function() {
-                this.classList.remove('selected');
             });
 
             td[i].appendChild(div);
@@ -685,6 +650,15 @@ const newGame = () => {
     handTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
     calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
+    document.body.addEventListener('touchstart', function() {
+        const td = document.getElementsByClassName('arrow-container');
+        for (let i = 0; i < td.length; i++) {
+            td[i].classList.add('arrow-container');
+            td[i].classList.add('tile');
+        }
+        selected = -1;
+    });
+
     initialize();
     getFirstHand();
     printCurrentHand();
@@ -692,13 +666,6 @@ const newGame = () => {
 }
 
 window.onload = function() {
-    if (detectMobile()) {
-        const params = new URLSearchParams(location.search);
-        if (params.get('mobile') === null) {
-            location.href = 'm/index.html';
-        }
-    }
-
     optionInitialize();
     newGame();
 }
