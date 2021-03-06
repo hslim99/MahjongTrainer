@@ -8,7 +8,6 @@ const winds = ['東', '南', '西', '北'];
 let openedTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
 let handTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
 let calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-let selected = -1; // for mobile devices
 let numType = -1;
 let myWind = '東';
 let haitei = '南';
@@ -187,57 +186,33 @@ const printCurrentHand = () => {
         const img = document.createElement('img');
         img.setAttribute('src', 'img/' + hand[i] + '.png');
         img.classList.add('selectable');
-        if (detectMobile()) {
-            img.addEventListener('click', function(e) {
-                discardForMobile(i);
-                removeAllHover();
-                this.classList.add('hover');
-                //e.stopPropagation();
-            });
-        }
-        else {
-            img.addEventListener('click', function() { discardTile(i); });
-            img.addEventListener('mouseenter', function() { 
-                this.classList.add('hover');
-                showNextHandInfo(i, false);
-            });
-            img.addEventListener('mouseleave', function() { 
-                this.classList.remove('hover');
-            });
-        }
+        img.addEventListener('click', function() { discardTile(i); });
+        img.addEventListener('mouseenter', function() { 
+            this.classList.add('hover');
+            showNextHandInfo(i, false);
+        });
+        img.addEventListener('mouseleave', function() { 
+            this.classList.remove('hover');
+        });
 
         const span = document.createElement('span');
         span.classList.add('arrow-box');
 
         td.classList.add('arrow-container');
         td.classList.add('tile');
-        if (detectMobile()) {
-            td.addEventListener('click', function(e) {
-                if (!optionShanten) { return; }
+        td.addEventListener('mouseenter', function(e) {
+            if (!optionShanten) { return; }
 
-                const td = document.getElementsByClassName('arrow-container');
-                for (let i = 0; i < td.length; i++) {
-                    td[i].classList.remove('selected');
-                }
-                this.classList.add('selected');
-                e.stopPropagation();
-            });
-        }
-        else {
-            td.addEventListener('mouseenter', function(e) {
-                if (!optionShanten) { return; }
-
-                const td = document.getElementsByClassName('arrow-container');
-                for (let i = 0; i < td.length; i++) {
-                    td[i].classList.remove('selected');
-                }
-                this.classList.add('selected');
-                e.stopPropagation();
-            });
-            td.addEventListener('mouseleave', function() {
-                this.classList.remove('selected');
-            });
-        }
+            const td = document.getElementsByClassName('arrow-container');
+            for (let i = 0; i < td.length; i++) {
+                td[i].classList.remove('selected');
+            }
+            this.classList.add('selected');
+            e.stopPropagation();
+        });
+        td.addEventListener('mouseleave', function() {
+            this.classList.remove('selected');
+        });
         td.appendChild(img);
         td.appendChild(span);
         tr.appendChild(td);
@@ -554,57 +529,33 @@ const checkKan = () => {
             div.classList.add('selectable');
             div.appendChild(getTermElement(5));
 
-            if (detectMobile()) {
-                div.addEventListener('click', function(e) {
-                    kanForMobile(i);
-                    removeAllHover();
-                    this.classList.add('hover');
-                    //e.stopPropagation();
-                });
-            }
-            else {
-                div.addEventListener('click', function() { callKan(i); });
-                div.addEventListener('mouseenter', function() {
-                    showNextHandInfo(i, true);
-                    this.classList.add('hover');
-                });
-                div.addEventListener('mouseleave', function() {
-                    this.classList.remove('hover');
-                })
-            }
+            div.addEventListener('click', function() { callKan(i); });
+            div.addEventListener('mouseenter', function() {
+                showNextHandInfo(i, true);
+                this.classList.add('hover');
+            });
+            div.addEventListener('mouseleave', function() {
+                this.classList.remove('hover');
+            })
 
             const span = document.createElement('span');
             span.classList.add('arrow-box');
 
             td[i].classList.add('arrow-container');
             td[i].classList.add('kan');
-            if (detectMobile()) {
-                td[i].addEventListener('click', function(e) {
-                    if (!optionShanten) { return; }
+            td[i].addEventListener('mouseenter', function(e) {
+                if (!optionShanten) { return; }
 
-                    const td = document.getElementsByClassName('arrow-container');
-                    for (let i = 0; i < td.length; i++) {
-                        td[i].classList.remove('selected');
-                    }
-                    this.classList.add('selected');
-                    e.stopPropagation();
-                });
-            }
-            else {
-                td[i].addEventListener('mouseenter', function(e) {
-                    if (!optionShanten) { return; }
-
-                    const td = document.getElementsByClassName('arrow-container');
-                    for (let i = 0; i < td.length; i++) {
-                        td[i].classList.remove('selected');
-                    }
-                    this.classList.add('selected');
-                    e.stopPropagation();
-                });
-                div.addEventListener('mouseleave', function() {
-                    this.classList.remove('selected');
-                });
-            }
+                const td = document.getElementsByClassName('arrow-container');
+                for (let i = 0; i < td.length; i++) {
+                    td[i].classList.remove('selected');
+                }
+                this.classList.add('selected');
+                e.stopPropagation();
+            });
+            div.addEventListener('mouseleave', function() {
+                this.classList.remove('selected');
+            });
 
             td[i].appendChild(div);
             td[i].appendChild(span);
@@ -620,57 +571,33 @@ const checkKan = () => {
             div.classList.add('selectable');
             div.appendChild(getTermElement(5));
 
-            if (detectMobile()) {
-                div.addEventListener('click', function(e) {
-                    kanForMobile(i);
-                    removeAllHover();
-                    this.classList.add('hover');
-                    //e.stopPropagation();
-                });
-            }
-            else {
-                div.addEventListener('click', function() { callKan(i); });
-                div.addEventListener('mouseenter', function() {
-                    showNextHandInfo(i, true);
-                    this.classList.add('hover');
-                });
-                div.addEventListener('mouseleave', function() {
-                    this.classList.remove('hover');
-                })
-            }
+            div.addEventListener('click', function() { callKan(i); });
+            div.addEventListener('mouseenter', function() {
+                showNextHandInfo(i, true);
+                this.classList.add('hover');
+            });
+            div.addEventListener('mouseleave', function() {
+                this.classList.remove('hover');
+            })
 
             const span = document.createElement('span');
             span.classList.add('arrow-box');
 
             td[i].classList.add('arrow-container');
             td[i].classList.add('kan');
-            if (detectMobile()) {
-                div.addEventListener('click', function(e) {
-                    if (!optionShanten) { return; }
+            div.addEventListener('mouseenter', function(e) {
+                if (!optionShanten) { return; }
 
-                    const td = document.getElementsByClassName('arrow-container');
-                    for (let i = 0; i < td.length; i++) {
-                        td[i].classList.remove('selected');
-                    }
-                    this.classList.add('selected');
-                    e.stopPropagation();
-                });
-            }
-            else {
-                div.addEventListener('mouseenter', function(e) {
-                    if (!optionShanten) { return; }
-
-                    const td = document.getElementsByClassName('arrow-container');
-                    for (let i = 0; i < td.length; i++) {
-                        td[i].classList.remove('selected');
-                    }
-                    this.classList.add('selected');
-                    e.stopPropagation();
-                });
-                div.addEventListener('mouseleave', function() {
-                    this.classList.remove('selected');
-                });
-            }
+                const td = document.getElementsByClassName('arrow-container');
+                for (let i = 0; i < td.length; i++) {
+                    td[i].classList.remove('selected');
+                }
+                this.classList.add('selected');
+                e.stopPropagation();
+            });
+            div.addEventListener('mouseleave', function() {
+                this.classList.remove('selected');
+            });
 
             td[i].appendChild(div);
             td[i].appendChild(span);
@@ -758,17 +685,6 @@ const newGame = () => {
     handTilesNum = [[0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0]];
     calculatedTile = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
-    if (detectMobile()) {
-        document.body.addEventListener('click', function() {
-            const td = document.getElementsByClassName('arrow-container');
-            for (let i = 0; i < td.length; i++) {
-                td[i].classList.add('arrow-container');
-                td[i].classList.add('tile');
-            }
-            selected = -1;
-        });
-    }
-
     initialize();
     getFirstHand();
     printCurrentHand();
@@ -776,6 +692,13 @@ const newGame = () => {
 }
 
 window.onload = function() {
+    if (detectMobile()) {
+        const params = new URLSearchParams(location.search);
+        if (params.get('mobile') === null) {
+            location.href = 'm/index.html';
+        }
+    }
+
     optionInitialize();
     newGame();
 }
